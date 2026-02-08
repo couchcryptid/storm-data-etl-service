@@ -42,46 +42,50 @@ Requires a running Kafka broker accessible at the address configured in `.env`.
 
 All configuration is via environment variables (loaded from `.env` in Docker Compose):
 
-| Variable | Default | Description |
-|---|---|---|
-| `KAFKA_BROKERS` | `localhost:9092` | Comma-separated list of Kafka broker addresses |
-| `KAFKA_SOURCE_TOPIC` | `raw-weather-reports` | Topic to consume raw storm reports from |
-| `KAFKA_SINK_TOPIC` | `transformed-weather-data` | Topic to produce enriched events to |
-| `KAFKA_GROUP_ID` | `storm-data-etl` | Consumer group ID |
-| `HTTP_ADDR` | `:8080` | Address for the health/metrics HTTP server |
-| `LOG_LEVEL` | `info` | Log level: `debug`, `info`, `warn`, `error` |
-| `LOG_FORMAT` | `json` | Log format: `json` or `text` |
-| `SHUTDOWN_TIMEOUT` | `10s` | Graceful shutdown deadline |
+| Variable             | Default                    | Description                                    |
+| -------------------- | -------------------------- | ---------------------------------------------- |
+| `KAFKA_BROKERS`      | `localhost:9092`           | Comma-separated list of Kafka broker addresses |
+| `KAFKA_SOURCE_TOPIC` | `raw-weather-reports`      | Topic to consume raw storm reports from        |
+| `KAFKA_SINK_TOPIC`   | `transformed-weather-data` | Topic to produce enriched events to            |
+| `KAFKA_GROUP_ID`     | `storm-data-etl`           | Consumer group ID                              |
+| `HTTP_ADDR`          | `:8080`                    | Address for the health/metrics HTTP server     |
+| `LOG_LEVEL`          | `info`                     | Log level: `debug`, `info`, `warn`, `error`    |
+| `LOG_FORMAT`         | `json`                     | Log format: `json` or `text`                   |
+| `SHUTDOWN_TIMEOUT`   | `10s`                      | Graceful shutdown deadline                     |
 
 ## HTTP Endpoints
 
-| Endpoint | Description |
-|---|---|
-| `GET /healthz` | Liveness probe -- always returns `200` |
-| `GET /readyz` | Readiness probe -- returns `200` after the first message is processed, `503` otherwise |
-| `GET /metrics` | Prometheus metrics |
+| Endpoint       | Description                                                                            |
+| -------------- | -------------------------------------------------------------------------------------- |
+| `GET /healthz` | Liveness probe -- always returns `200`                                                 |
+| `GET /readyz`  | Readiness probe -- returns `200` after the first message is processed, `503` otherwise |
+| `GET /metrics` | Prometheus metrics                                                                     |
 
 ## Prometheus Metrics
 
-| Metric | Type | Description |
-|---|---|---|
-| `etl_messages_consumed_total` | Counter | Messages read from the source topic |
-| `etl_messages_produced_total` | Counter | Messages written to the sink topic |
-| `etl_transform_errors_total` | Counter | Transformation failures (malformed input) |
+| Metric                            | Type      | Description                                   |
+| --------------------------------- | --------- | --------------------------------------------- |
+| `etl_messages_consumed_total`     | Counter   | Messages read from the source topic           |
+| `etl_messages_produced_total`     | Counter   | Messages written to the sink topic            |
+| `etl_transform_errors_total`      | Counter   | Transformation failures (malformed input)     |
 | `etl_processing_duration_seconds` | Histogram | Duration of each extract-transform-load cycle |
-| `etl_pipeline_running` | Gauge | `1` when the pipeline loop is active |
+| `etl_pipeline_running`            | Gauge     | `1` when the pipeline loop is active          |
 
 ## Make Targets
 
 ```
 make build        # Build binary to bin/etl
 make run          # Run with go run
-make test         # Run tests with race detector
+make test         # Run unit + integration tests
+make test-unit    # Run unit tests with race detector
+make test-integration # Run integration tests (Docker required)
 make test-cover   # Run tests and open HTML coverage report
 make lint         # Run golangci-lint
 make fmt          # Format code with gofmt and goimports
 make clean        # Remove build artifacts
 ```
+
+Integration tests require Docker because they use a Kafka container.
 
 ## Project Structure
 
