@@ -115,3 +115,6 @@ A separate `semantic-release` workflow handles versioning and GitHub releases on
 - **Domain logic is pure**: The `domain` package has no infrastructure imports. Transformation functions are stateless and operate on domain types.
 - **Testable time**: The `clock` package variable (via `clockwork`) allows tests to control time without relying on `time.Sleep` or wall-clock assertions.
 - **Structured logging**: All logging uses `log/slog` with key-value pairs. The pipeline logs include Kafka metadata (topic, partition, offset) for traceability.
+- **Feature flags via environment**: Optional features follow the `FOO_ENABLED` + `FOO_TOKEN` pattern. Setting `MAPBOX_TOKEN` auto-enables geocoding; `MAPBOX_ENABLED` provides an explicit override. The `nil` geocoder path is always safe.
+- **Domain interfaces for external services**: The `domain.Geocoder` interface defines the geocoding port. The Mapbox adapter implements it, and a `nil` geocoder disables the feature. Pass `nil` for the geocoder and `slog.Default()` for the logger in tests that don't need geocoding.
+- **Adapter constructor injection**: All adapters (Kafka, HTTP, Mapbox) accept `*slog.Logger` via their constructors for consistent, testable logging.

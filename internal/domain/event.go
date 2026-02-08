@@ -48,8 +48,15 @@ type StormEvent struct {
 	Severity     string    `json:"severity,omitempty"`
 	SourceOffice string    `json:"source_office,omitempty"`
 	TimeBucket   string    `json:"time_bucket,omitempty"`
-	RawPayload   []byte    `json:"-"`
-	ProcessedAt  time.Time `json:"processed_at"`
+
+	// Geocoding enrichment fields.
+	FormattedAddress string  `json:"formatted_address,omitempty"`
+	PlaceName        string  `json:"place_name,omitempty"`
+	GeoConfidence    float64 `json:"geo_confidence,omitempty"`
+	GeoSource        string  `json:"geo_source,omitempty"` // "forward", "reverse", "original", "failed"
+
+	RawPayload  []byte    `json:"-"`
+	ProcessedAt time.Time `json:"processed_at"`
 }
 
 // OutputEvent is the serialized form destined for the sink topic.

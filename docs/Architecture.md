@@ -17,6 +17,8 @@ Kafka Source Topic            ETL Service                    Kafka Sink Topic
                         |   - Normalize fields    |
                         |   - Enrich (severity,   |
                         |     location, office)   |
+                        |   - Geocode (optional,  |
+                        |     via Mapbox API)      |
                         |           |             |
                         | Load (KafkaWriter)      | --> Enriched JSON event
                         +-------------------------+
@@ -37,6 +39,8 @@ Pure domain logic with no infrastructure dependencies.
 
 - **`event.go`** -- Domain types: `RawEvent`, `StormEvent`, `OutputEvent`, `Location`, `Geo`
 - **`transform.go`** -- All transformation and enrichment functions: parsing, normalization, severity derivation, location parsing, serialization
+- **`geocoder.go`** -- `Geocoder` interface and `GeocodingResult` type (domain port for geocoding providers)
+- **`geocode.go`** -- `EnrichWithGeocoding()` function: forward/reverse geocoding with graceful degradation
 - **`clock.go`** -- Swappable clock for deterministic testing
 
 ### `internal/pipeline`
@@ -44,7 +48,7 @@ Pure domain logic with no infrastructure dependencies.
 Orchestration layer that defines the ETL interfaces and loop.
 
 - **`pipeline.go`** -- `Extractor`, `Transformer`, and `Loader` interfaces. The `Pipeline` struct runs the continuous extract-transform-load loop with backoff on failure.
-- **`transform.go`** -- `StormTransformer` adapts domain functions to the `Transformer` interface
+- **`transform.go`** -- `StormTransformer` adapts domain functions to the `Transformer` interface. Calls `EnrichStormEvent` followed by `EnrichWithGeocoding` (when a geocoder is configured).
 
 ### `internal/adapter/kafka`
 
@@ -52,6 +56,13 @@ Kafka infrastructure adapters that directly implement the pipeline's `Extractor`
 
 - **`reader.go`** -- Wraps `segmentio/kafka-go` Reader with explicit offset commit (consumer group mode). Implements `pipeline.Extractor`.
 - **`writer.go`** -- Wraps `segmentio/kafka-go` Writer with `RequireAll` acks. Implements `pipeline.Loader`.
+
+### `internal/adapter/mapbox`
+
+Mapbox Geocoding API adapter that implements `domain.Geocoder`.
+
+- **`client.go`** -- HTTP client for forward and reverse geocoding via the Mapbox Places API
+- **`cache.go`** -- `CachedGeocoder` decorator wrapping any `Geocoder` with a thread-safe LRU cache. Empty results (no `FormattedAddress`) are not cached so transient "not found" responses can be retried.
 
 ### `internal/adapter/http`
 
@@ -98,3 +109,15 @@ The main function uses `signal.NotifyContext` to capture `SIGINT`/`SIGTERM`. On 
 ### Thread Safety
 
 The `Pipeline.ready` flag uses `atomic.Bool` since it is written by the pipeline goroutine and read by the HTTP readiness handler concurrently.
+
+### Feature-Flagged Geocoding
+
+Geocoding enrichment is opt-in via `MAPBOX_TOKEN` / `MAPBOX_ENABLED` environment variables. When disabled, the `Geocoder` dependency is `nil` and `EnrichWithGeocoding` is a no-op, so the transform path remains purely CPU-bound. This allows the service to run without external API dependencies while supporting richer data when configured.
+
+### Geocoding Graceful Degradation
+
+If a geocoding request fails (network error, API error, or no results), the event is still enriched with all other fields and loaded to the sink topic. The `GeoSource` field is set to `"failed"` or `"original"` to indicate what happened, allowing downstream consumers to distinguish between geocoded and non-geocoded events.
+
+### LRU Cache for Geocoding
+
+The `CachedGeocoder` uses an in-memory LRU cache to avoid redundant API calls for frequently seen locations. The cache is thread-safe, configurable in size (`MAPBOX_CACHE_SIZE`), and only stores successful results with a non-empty `FormattedAddress`.

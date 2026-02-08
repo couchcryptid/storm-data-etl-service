@@ -1,6 +1,6 @@
 # Enrichment Rules
 
-The transform stage applies a series of enrichment steps to each raw storm event. All logic lives in `internal/domain/transform.go`.
+The transform stage applies a series of enrichment steps to each raw storm event. Core enrichment logic lives in `internal/domain/transform.go`, with geocoding enrichment in `internal/domain/geocode.go`.
 
 ## Pipeline
 
@@ -15,7 +15,8 @@ Each event passes through these steps in order:
 7. **Parse location** -- Extract distance, direction, and place name from raw location string
 8. **Derive time bucket** -- Truncate begin time to the hour (UTC)
 9. **Set processed timestamp** -- Record when enrichment occurred
-10. **Serialize** -- Marshal to JSON for the output topic
+10. **Geocode** *(optional)* -- Forward or reverse geocode via Mapbox to enrich with `formatted_address`, `place_name`, `geo_confidence`, and `geo_source`
+11. **Serialize** -- Marshal to JSON for the output topic
 
 ## Event Type Normalization
 
@@ -110,12 +111,45 @@ The `begin_time` is truncated to the hour in UTC and formatted as RFC 3339.
 
 Example: `2024-04-26T15:45:30Z` -> `2024-04-26T15:00:00Z`
 
+## Geocoding Enrichment
+
+When Mapbox geocoding is enabled (`MAPBOX_TOKEN` set), events are enriched with location data via forward or reverse geocoding. This step is handled by `EnrichWithGeocoding()` in `internal/domain/geocode.go`.
+
+### Strategy
+
+| Condition | Action |
+|---|---|
+| Coordinates missing, location name + state present | **Forward geocode**: resolve name to coordinates |
+| Coordinates present | **Reverse geocode**: resolve coordinates to place details |
+| No coordinates and no name/state | Skip geocoding |
+
+### Result Fields
+
+| Field | Description |
+|---|---|
+| `formatted_address` | Full place name returned by Mapbox (e.g., `"Austin, Texas, United States"`) |
+| `place_name` | Short place name (e.g., `"Austin"`) |
+| `geo_confidence` | Provider confidence score (0.0--1.0) |
+| `geo_source` | How the coordinates were obtained: `"forward"`, `"reverse"`, `"original"`, or `"failed"` |
+
+### Graceful Degradation
+
+Geocoding failures never block the pipeline. If the API call fails or returns no results:
+
+- The event proceeds through the rest of the pipeline unchanged
+- `geo_source` is set to `"failed"` (API error) or `"original"` (no results)
+- A warning is logged with the event ID and error details
+
+### Caching
+
+Results are cached in an LRU cache (`MAPBOX_CACHE_SIZE`, default 1000 entries). Empty results (no `FormattedAddress`) are not cached so transient "not found" responses can be retried on the next occurrence.
+
 ## Output Event Format
 
 The serialized output includes:
 
 - **Key**: Event ID as bytes
-- **Value**: Full `StormEvent` JSON (excludes `RawPayload`)
+- **Value**: Full `StormEvent` JSON (excludes `RawPayload`), including geocoding fields when available (`formatted_address`, `place_name`, `geo_confidence`, `geo_source`)
 - **Headers**:
   - `type`: Normalized event type
   - `processed_at`: RFC 3339 timestamp of when enrichment occurred

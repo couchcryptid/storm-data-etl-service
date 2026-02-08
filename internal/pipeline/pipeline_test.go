@@ -145,7 +145,7 @@ func TestPipeline_Run_CommitsAfterLoad(t *testing.T) {
 func TestStormTransformer_Transform(t *testing.T) {
 	raw := makeRawEvent(t, "evt-3", "tornado")
 
-	tfm := pipeline.NewTransformer()
+	tfm := pipeline.NewTransformer(nil, slog.Default())
 	out, err := tfm.Transform(context.Background(), raw)
 	require.NoError(t, err)
 	assert.Equal(t, []byte("evt-3"), out.Key)

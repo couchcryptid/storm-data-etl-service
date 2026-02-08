@@ -11,11 +11,12 @@ The pipeline processes messages **sequentially** in a single goroutine: one extr
 | Stage | Dominant Cost | Typical Latency |
 |---|---|---|
 | **Extract** | Kafka fetch (network I/O, broker response) | 1--50 ms when messages are available; blocks indefinitely when the topic is idle |
-| **Transform** | JSON unmarshal, regex matching, field normalization, JSON marshal | < 0.1 ms for a typical storm event (~1 KB) |
+| **Transform** (no geocoding) | JSON unmarshal, regex matching, field normalization, JSON marshal | < 0.1 ms for a typical storm event (~1 KB) |
+| **Transform** (with geocoding) | Above + Mapbox API HTTP round-trip (when cache misses) | 50--200 ms on cache miss; < 0.1 ms on cache hit |
 | **Load** | Kafka produce with `RequireAll` acks (network round-trip, broker replication) | 5--30 ms depending on broker latency and replication factor |
 | **Commit** | Kafka offset commit (network round-trip) | 2--10 ms |
 
-Transform is CPU-bound and negligible compared to the I/O-bound extract, load, and commit stages. **Kafka round-trips dominate end-to-end latency.**
+Without geocoding, transform is CPU-bound and negligible compared to the I/O-bound extract, load, and commit stages. **Kafka round-trips dominate end-to-end latency.** With geocoding enabled, cache misses add a Mapbox API round-trip to the transform stage; the LRU cache mitigates this for frequently seen locations.
 
 ### Theoretical Single-Instance Throughput
 
@@ -55,8 +56,9 @@ Each instance processes its assigned partitions sequentially. Messages within a 
 | **Regex** | Two compiled regexes (`sourceOfficeRe`, `locationRe`) allocated once at package init. |
 | **Prometheus** | Fixed set of 5 metric collectors. Negligible memory. |
 | **Kafka client** | Internal buffers for fetch and produce batching. Typically 5--20 MB per reader/writer. |
+| **Geocoding LRU cache** | Thread-safe doubly-linked list + map. Up to `MAPBOX_CACHE_SIZE` (default 1000) entries, each ~0.5 KB. Max ~0.5 MB at capacity. Only present when geocoding is enabled. |
 
-**Steady-state memory**: ~30--50 MB for a single instance under normal load. The 256 MB container limit in `compose.yml` provides ample headroom.
+**Steady-state memory**: ~30--50 MB for a single instance under normal load (add ~0.5 MB when geocoding cache is at capacity). The 256 MB container limit in `compose.yml` provides ample headroom.
 
 ## Backoff Impact
 
@@ -81,6 +83,7 @@ Backoff resets immediately after a successful extract. During sustained failures
 | Single-partition source topic | Cannot scale beyond one instance. | Increase source topic partition count. |
 | Offset commit per message | Extra round-trip after every successful load. | Batch commits (commit every N messages or every T seconds) at the cost of at-least-once replay window. |
 | `RequireAll` acks on producer | Waits for full ISR replication before acknowledging. | Acceptable for correctness; only reduce if latency is more important than durability. |
+| Geocoding API latency (cache miss) | Adds 50--200 ms per message on cache miss when geocoding is enabled. | LRU cache (`MAPBOX_CACHE_SIZE`) absorbs repeated locations. Increase cache size for higher hit rates. Geocoding is optional and can be disabled entirely. |
 
 ## Monitoring Throughput
 

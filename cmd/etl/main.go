@@ -11,7 +11,9 @@ import (
 
 	httpadapter "github.com/couchcryptid/storm-data-etl-service/internal/adapter/http"
 	kafkaadapter "github.com/couchcryptid/storm-data-etl-service/internal/adapter/kafka"
+	"github.com/couchcryptid/storm-data-etl-service/internal/adapter/mapbox"
 	"github.com/couchcryptid/storm-data-etl-service/internal/config"
+	"github.com/couchcryptid/storm-data-etl-service/internal/domain"
 	"github.com/couchcryptid/storm-data-etl-service/internal/observability"
 	"github.com/couchcryptid/storm-data-etl-service/internal/pipeline"
 )
@@ -26,9 +28,19 @@ func main() {
 	logger := observability.NewLogger(cfg)
 	metrics := observability.NewMetrics()
 
+	// Initialize geocoder (feature-flagged via MAPBOX_ENABLED / MAPBOX_TOKEN).
+	var geocoder domain.Geocoder
+	if cfg.MapboxEnabled {
+		client := mapbox.NewClient(cfg.MapboxToken, cfg.MapboxTimeout, logger)
+		geocoder = mapbox.NewCachedGeocoder(client, cfg.MapboxCacheSize)
+		logger.Info("mapbox geocoding enabled", "cache_size", cfg.MapboxCacheSize, "timeout", cfg.MapboxTimeout)
+	} else {
+		logger.Info("mapbox geocoding disabled")
+	}
+
 	reader := kafkaadapter.NewReader(cfg, logger)
 	writer := kafkaadapter.NewWriter(cfg, logger)
-	transformer := pipeline.NewTransformer()
+	transformer := pipeline.NewTransformer(geocoder, logger)
 
 	p := pipeline.New(reader, transformer, writer, logger, metrics)
 

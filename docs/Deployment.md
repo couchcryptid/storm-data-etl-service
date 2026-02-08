@@ -78,7 +78,7 @@ docker run -p 8080:8080 \
 
 | File | Used By | Description |
 |---|---|---|
-| `.env.example` | Reference | Template for the ETL service config |
+| `.env.example` | Reference | Template for the ETL service config (includes Mapbox geocoding vars) |
 | `.env` | `storm-data-etl` container | Actual ETL config (gitignored) |
 | `.env.kafka` | `kafka` container | Kafka broker settings (listeners, replication) |
 | `.env.zookeeper` | `zookeeper` container | Zookeeper client port and tick time |
@@ -99,3 +99,4 @@ Key settings:
 - Set `LOG_FORMAT=json` for structured log aggregation
 - Monitor the Prometheus metrics endpoint with your observability stack
 - Consider running multiple ETL instances for horizontal scaling (Kafka consumer groups handle partition assignment automatically)
+- **Geocoding (Mapbox)**: Set `MAPBOX_TOKEN` to enable geocoding enrichment. Be aware of Mapbox API rate limits and pricing. The LRU cache (`MAPBOX_CACHE_SIZE`, default 1000) reduces redundant calls for frequently seen locations. Set `MAPBOX_TIMEOUT` appropriately for your network latency to the Mapbox API. Geocoding failures are non-fatal -- the pipeline continues without geocoded data.

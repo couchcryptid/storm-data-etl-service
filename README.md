@@ -7,7 +7,7 @@ A Go service that consumes raw weather storm reports from a Kafka topic, enriche
 The service runs a continuous ETL loop:
 
 1. **Extract** -- Consumes JSON storm reports from a Kafka source topic
-2. **Transform** -- Parses, normalizes, and enriches each event (severity classification, location parsing, unit normalization)
+2. **Transform** -- Parses, normalizes, and enriches each event (severity classification, location parsing, unit normalization, optional geocoding via Mapbox)
 3. **Load** -- Produces the enriched event to a Kafka sink topic
 
 Supported event types: **hail**, **wind**, and **tornado**.
@@ -52,6 +52,10 @@ All configuration is via environment variables (loaded from `.env` in Docker Com
 | `LOG_LEVEL`          | `info`                     | Log level: `debug`, `info`, `warn`, `error`    |
 | `LOG_FORMAT`         | `json`                     | Log format: `json` or `text`                   |
 | `SHUTDOWN_TIMEOUT`   | `10s`                      | Graceful shutdown deadline                     |
+| `MAPBOX_TOKEN`       | *(none)*                   | Mapbox API token; auto-enables geocoding if set |
+| `MAPBOX_ENABLED`     | auto-detected              | Explicit override (`true`/`false`) for geocoding |
+| `MAPBOX_TIMEOUT`     | `5s`                       | HTTP timeout for Mapbox API requests           |
+| `MAPBOX_CACHE_SIZE`  | `1000`                     | Max entries in the geocoding LRU cache         |
 
 ## HTTP Endpoints
 
@@ -95,8 +99,9 @@ internal/
   adapter/
     http/                   Health, readiness, and metrics HTTP server
     kafka/                  Kafka reader (consumer) and writer (producer)
+    mapbox/                 Mapbox geocoding client with LRU cache
   config/                   Environment-based configuration
-  domain/                   Domain types and transformation logic
+  domain/                   Domain types, transformation logic, and geocoding
   integration/              Integration tests (require Docker)
   observability/            Structured logging and Prometheus metrics
   pipeline/                 ETL orchestration (extract, transform, load)
