@@ -239,6 +239,79 @@ func TestDomain_SerializeStormEvent(t *testing.T) {
 	}
 }
 
+// --- additional mocks ---
+
+type retryExtractor struct {
+	event domain.RawEvent
+	max   int
+	count atomic.Int64
+}
+
+func (m *retryExtractor) Extract(ctx context.Context) (domain.RawEvent, error) {
+	n := int(m.count.Add(1))
+	if n > m.max {
+		<-ctx.Done()
+		return domain.RawEvent{}, ctx.Err()
+	}
+	return m.event, nil
+}
+
+type failingLoader struct {
+	callCount atomic.Int64
+	failUntil int
+	loaded    []domain.OutputEvent
+}
+
+func (m *failingLoader) Load(_ context.Context, event domain.OutputEvent) error {
+	n := int(m.callCount.Add(1))
+	if n <= m.failUntil {
+		return errors.New("load failed")
+	}
+	m.loaded = append(m.loaded, event)
+	return nil
+}
+
+// --- additional tests ---
+
+func TestPipeline_Run_LoadError_Backoff(t *testing.T) {
+	raw := makeRawEvent(t, "evt-backoff", "hail")
+
+	ext := &retryExtractor{event: raw, max: 2}
+	tfm := &mockTransformer{}
+	ldr := &failingLoader{failUntil: 1}
+	metrics := newTestMetrics()
+
+	p := pipeline.New(ext, tfm, ldr, slog.Default(), metrics)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	err := p.Run(ctx)
+	require.NoError(t, err)
+	assert.Len(t, ldr.loaded, 1, "second attempt should succeed after backoff")
+}
+
+func TestPipeline_Run_CommitError(t *testing.T) {
+	raw := makeRawEvent(t, "evt-commit-err", "tornado")
+	raw.Commit = func(_ context.Context) error {
+		return errors.New("commit failed")
+	}
+
+	ext := &mockExtractor{events: []domain.RawEvent{raw}}
+	tfm := &mockTransformer{}
+	ldr := &mockLoader{}
+	metrics := newTestMetrics()
+
+	p := pipeline.New(ext, tfm, ldr, slog.Default(), metrics)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
+	defer cancel()
+
+	err := p.Run(ctx)
+	require.NoError(t, err)
+	assert.Len(t, ldr.loaded, 1)
+}
+
 // --- helpers ---
 
 func makeRawCSVEvent(t *testing.T, eventType, magnitude string) domain.RawEvent {
