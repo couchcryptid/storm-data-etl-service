@@ -12,7 +12,7 @@ import (
 
 // ReadinessChecker reports whether the service is ready to serve traffic.
 type ReadinessChecker interface {
-	Ready() bool
+	CheckReadiness(ctx context.Context) error
 }
 
 // Server exposes health, readiness, and metrics HTTP endpoints.
@@ -64,17 +64,23 @@ func (s *Server) handleHealth(w http.ResponseWriter, _ *http.Request) {
 }
 
 func handleReady(checker ReadinessChecker) http.HandlerFunc {
-	return func(w http.ResponseWriter, _ *http.Request) {
-		if checker.Ready() {
-			writeJSON(w, http.StatusOK, map[string]string{"status": "ready"})
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
+		defer cancel()
+
+		if err := checker.CheckReadiness(ctx); err != nil {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
+				"status": "not ready",
+				"error":  err.Error(),
+			})
 			return
 		}
-		writeJSON(w, http.StatusServiceUnavailable, map[string]string{"status": "not_ready"})
+		writeJSON(w, http.StatusOK, map[string]string{"status": "ready"})
 	}
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(v) //nolint:errcheck
+	json.NewEncoder(w).Encode(v) //nolint:errcheck // best-effort health response
 }

@@ -9,18 +9,43 @@ linters:
     - unused
     - gosimple
     - ineffassign
+    - typecheck
+    - bodyclose
     - gofmt
     - goimports
-    - misspell
-    - revive
     - gocritic
     - gosec
+    - misspell
+    - prealloc
+    - revive
+    - unconvert
     - unparam
+    - errname
+    - exhaustive
+    - noctx
     - gocyclo
 
 linters-settings:
   gocyclo:
     min-complexity: 15
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+    disabled-checks:
+      - hugeParam
+      - unnamedResult
+      - httpNoBody
+  revive:
+    rules:
+      - name: var-naming
+      - name: blank-imports
+      - name: context-as-argument
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
 
 issues:
   exclude-dirs:

@@ -1,7 +1,9 @@
 package http_test
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
@@ -13,17 +15,17 @@ import (
 )
 
 type mockReadiness struct {
-	ready bool
+	err error
 }
 
-func (m *mockReadiness) Ready() bool { return m.ready }
+func (m *mockReadiness) CheckReadiness(_ context.Context) error { return m.err }
 
-func newTestServer(ready bool) *httpadapter.Server {
-	return httpadapter.NewServer(":0", &mockReadiness{ready: ready}, slog.Default())
+func newTestServer(readyErr error) *httpadapter.Server {
+	return httpadapter.NewServer(":0", &mockReadiness{err: readyErr}, slog.Default())
 }
 
 func TestHealthzReturns200(t *testing.T) {
-	srv := newTestServer(true)
+	srv := newTestServer(nil)
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/healthz", nil)
 
@@ -37,7 +39,7 @@ func TestHealthzReturns200(t *testing.T) {
 }
 
 func TestReadyzReturns200WhenReady(t *testing.T) {
-	srv := newTestServer(true)
+	srv := newTestServer(nil)
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/readyz", nil)
 
@@ -51,7 +53,7 @@ func TestReadyzReturns200WhenReady(t *testing.T) {
 }
 
 func TestReadyzReturns503WhenNotReady(t *testing.T) {
-	srv := newTestServer(false)
+	srv := newTestServer(fmt.Errorf("not ready yet"))
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/readyz", nil)
 
@@ -61,11 +63,12 @@ func TestReadyzReturns503WhenNotReady(t *testing.T) {
 
 	var body map[string]string
 	require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &body))
-	assert.Equal(t, "not_ready", body["status"])
+	assert.Equal(t, "not ready", body["status"])
+	assert.Equal(t, "not ready yet", body["error"])
 }
 
 func TestMetricsEndpoint(t *testing.T) {
-	srv := newTestServer(true)
+	srv := newTestServer(nil)
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/metrics", nil)
 

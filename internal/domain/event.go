@@ -5,6 +5,23 @@ import (
 	"time"
 )
 
+// RawCSVRecord represents the flat JSON structure produced by the collector.
+// Each CSV type has a different magnitude column (Size, F_Scale, Speed),
+// but all share the remaining columns.
+type RawCSVRecord struct {
+	Time     string `json:"Time"`
+	Size     string `json:"Size"`     // hail magnitude (hundredths of inches)
+	FScale   string `json:"F_Scale"`  // tornado magnitude (EF scale)
+	Speed    string `json:"Speed"`    // wind magnitude (mph)
+	Location string `json:"Location"` // NWS relative location, e.g. "8 ESE Chappel"
+	County   string `json:"County"`
+	State    string `json:"State"`
+	Lat      string `json:"Lat"`
+	Lon      string `json:"Lon"`
+	Comments string `json:"Comments"`
+	Type     string `json:"Type"` // "hail", "wind", or "tornado"
+}
+
 // RawEvent represents an unprocessed message from the source topic.
 type RawEvent struct {
 	Key       []byte

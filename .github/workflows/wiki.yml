@@ -9,13 +9,12 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   check-docs:
     name: Check for doc changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     outputs:
       docs_changed: ${{ steps.filter.outputs.docs_changed }}
@@ -38,6 +37,8 @@ jobs:
   publish-wiki:
     name: Publish Wiki to GitHub
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: check-docs
     if: needs.check-docs.outputs.docs_changed == 'true'
     env:

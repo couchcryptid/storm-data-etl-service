@@ -1,48 +1,17 @@
 services:
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.7.0
-    container_name: zookeeper
-    env_file: .env.zookeeper
-    ports:
-      - "2181:2181"
-    volumes:
-      - zookeeper-data:/var/lib/zookeeper/data
-      - zookeeper-log:/var/lib/zookeeper/log
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "2181"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-    networks:
-      - kafka-network
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
-
   kafka:
-    image: confluentinc/cp-kafka:7.7.0
+    image: apache/kafka:3.7.0
     container_name: kafka
-    depends_on:
-      zookeeper:
-        condition: service_healthy
-    ports:
-      - "9092:9092"
     env_file: .env.kafka
-    volumes:
-      - kafka-data:/var/lib/kafka/data
+    ports:
+      - "29092:29092"
     healthcheck:
-      test: ["CMD", "kafka-topics", "--bootstrap-server", "kafka:29092", "--list"]
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list"]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 5
       start_period: 30s
     restart: unless-stopped
-    networks:
-      - kafka-network
     deploy:
       resources:
         limits:
@@ -66,20 +35,9 @@ services:
       retries: 3
       start_period: 10s
     restart: unless-stopped
-    networks:
-      - kafka-network
     deploy:
       resources:
         limits:
           memory: 256M
         reservations:
           memory: 128M
-
-networks:
-  kafka-network:
-    driver: bridge
-
-volumes:
-  zookeeper-data:
-  zookeeper-log:
-  kafka-data:

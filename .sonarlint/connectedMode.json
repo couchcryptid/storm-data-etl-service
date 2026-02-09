@@ -1,0 +1,5 @@
+{
+    "sonarCloudOrganization": "couchcryptid",
+    "projectKey": "couchcryptid_storm-data-etl-service",
+    "region": "EU"
+}

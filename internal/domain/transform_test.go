@@ -2,6 +2,7 @@ package domain
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 	"time"
 
@@ -10,29 +11,67 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestParseRawEvent(t *testing.T) {
-	t.Run("valid JSON", func(t *testing.T) {
-		payload := StormEvent{
-			ID:        "evt-123",
-			EventType: "hail",
-			Magnitude: 1.5,
-			Unit:      "in",
-			Source:    "COOP",
-		}
-		data, err := json.Marshal(payload)
-		require.NoError(t, err)
+const (
+	testEventID    = "evt-123"
+	testLocationNW = "5.2 NW AUSTIN"
+	testTimeBucket = "2024-04-26T15:00:00Z"
+	testUnknown    = "unknown type"
+)
 
-		raw := RawEvent{Value: data}
+func TestParseRawEvent(t *testing.T) {
+	baseDate := time.Date(2024, 4, 26, 0, 0, 0, 0, time.UTC)
+
+	t.Run("hail CSV record", func(t *testing.T) {
+		data := []byte(`{"Time":"1510","Size":"125","Location":"8 ESE Chappel","County":"San Saba","State":"TX","Lat":"31.02","Lon":"-98.44","Comments":"1.25 inch hail reported. (SJT)","Type":"hail"}`)
+		raw := RawEvent{Value: data, Timestamp: baseDate}
 		result, err := ParseRawEvent(raw)
 
 		require.NoError(t, err)
-		assert.Equal(t, "evt-123", result.ID)
 		assert.Equal(t, "hail", result.EventType)
-		assert.Equal(t, 1.5, result.Magnitude)
-		assert.Equal(t, "in", result.Unit)
-		assert.Equal(t, "COOP", result.Source)
+		assert.Equal(t, 31.02, result.Geo.Lat)
+		assert.Equal(t, -98.44, result.Geo.Lon)
+		assert.Equal(t, 125.0, result.Magnitude)
+		assert.Equal(t, "8 ESE Chappel", result.Location.Raw)
+		assert.Equal(t, "San Saba", result.Location.County)
+		assert.Equal(t, "TX", result.Location.State)
+		assert.Equal(t, "1.25 inch hail reported. (SJT)", result.Comments)
+		assert.Equal(t, time.Date(2024, 4, 26, 15, 10, 0, 0, time.UTC), result.BeginTime)
+		assert.Equal(t, result.BeginTime, result.EndTime)
+		assert.NotEmpty(t, result.ID)
+		assert.True(t, strings.HasPrefix(result.ID, "hail-"))
 		assert.Equal(t, data, result.RawPayload)
-		assert.True(t, result.ProcessedAt.IsZero())
+	})
+
+	t.Run("tornado CSV record", func(t *testing.T) {
+		data := []byte(`{"Time":"1223","F_Scale":"EF2","Location":"2 N Mcalester","County":"Pittsburg","State":"OK","Lat":"34.96","Lon":"-95.77","Comments":"Tornado confirmed (TSA)","Type":"tornado"}`)
+		raw := RawEvent{Value: data, Timestamp: baseDate}
+		result, err := ParseRawEvent(raw)
+
+		require.NoError(t, err)
+		assert.Equal(t, "tornado", result.EventType)
+		assert.Equal(t, 2.0, result.Magnitude)
+		assert.Equal(t, 34.96, result.Geo.Lat)
+		assert.True(t, strings.HasPrefix(result.ID, "tornado-"))
+	})
+
+	t.Run("wind CSV record", func(t *testing.T) {
+		data := []byte(`{"Time":"1251","Speed":"65","Location":"4 N Dow","County":"Pittsburg","State":"OK","Lat":"34.94","Lon":"-95.59","Comments":"(TSA)","Type":"wind"}`)
+		raw := RawEvent{Value: data, Timestamp: baseDate}
+		result, err := ParseRawEvent(raw)
+
+		require.NoError(t, err)
+		assert.Equal(t, "wind", result.EventType)
+		assert.Equal(t, 65.0, result.Magnitude)
+		assert.True(t, strings.HasPrefix(result.ID, "wind-"))
+	})
+
+	t.Run("UNK magnitude", func(t *testing.T) {
+		data := []byte(`{"Time":"1245","Speed":"UNK","Location":"Mcalester","County":"Pittsburg","State":"OK","Lat":"34.94","Lon":"-95.77","Comments":"","Type":"wind"}`)
+		raw := RawEvent{Value: data, Timestamp: baseDate}
+		result, err := ParseRawEvent(raw)
+
+		require.NoError(t, err)
+		assert.Equal(t, 0.0, result.Magnitude)
 	})
 
 	t.Run("invalid JSON", func(t *testing.T) {
@@ -44,12 +83,101 @@ func TestParseRawEvent(t *testing.T) {
 	})
 
 	t.Run("empty JSON", func(t *testing.T) {
-		raw := RawEvent{Value: []byte("{}")}
+		raw := RawEvent{Value: []byte("{}"), Timestamp: baseDate}
 		result, err := ParseRawEvent(raw)
 
 		require.NoError(t, err)
-		assert.Equal(t, "", result.ID)
+		assert.Equal(t, "", result.EventType)
 		assert.True(t, result.ProcessedAt.IsZero())
+	})
+
+	t.Run("deterministic ID", func(t *testing.T) {
+		data := []byte(`{"Time":"1510","Size":"125","Location":"8 ESE Chappel","County":"San Saba","State":"TX","Lat":"31.02","Lon":"-98.44","Comments":"","Type":"hail"}`)
+		raw := RawEvent{Value: data, Timestamp: baseDate}
+
+		result1, err := ParseRawEvent(raw)
+		require.NoError(t, err)
+		result2, err := ParseRawEvent(raw)
+		require.NoError(t, err)
+
+		assert.Equal(t, result1.ID, result2.ID)
+	})
+}
+
+func TestParseHHMM(t *testing.T) {
+	baseDate := time.Date(2024, 4, 26, 0, 0, 0, 0, time.UTC)
+
+	tests := []struct {
+		name     string
+		hhmm     string
+		expected time.Time
+	}{
+		{"four digits", "1510", time.Date(2024, 4, 26, 15, 10, 0, 0, time.UTC)},
+		{"three digits", "930", time.Date(2024, 4, 26, 9, 30, 0, 0, time.UTC)},
+		{"midnight", "0000", time.Date(2024, 4, 26, 0, 0, 0, 0, time.UTC)},
+		{"empty string", "", baseDate},
+		{"too short", "12", baseDate},
+		{"invalid hour", "2510", baseDate},
+		{"invalid minute", "1299", baseDate},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := parseHHMM(baseDate, tt.hhmm)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+func TestParseMagnitudeField(t *testing.T) {
+	tests := []struct {
+		name     string
+		typ      string
+		size     string
+		fScale   string
+		speed    string
+		expected float64
+	}{
+		{"hail size", "hail", "125", "", "", 125},
+		{"tornado EF scale", "tornado", "", "EF2", "", 2},
+		{"tornado F prefix", "tornado", "", "F3", "", 3},
+		{"wind speed", "wind", "", "", "65", 65},
+		{"UNK magnitude", "wind", "", "", "UNK", 0},
+		{"empty magnitude", "hail", "", "", "", 0},
+		{testUnknown, "snow", "", "", "", 0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := parseMagnitudeField(tt.typ, tt.size, tt.fScale, tt.speed)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+func TestGenerateID(t *testing.T) {
+	t.Run("includes event type prefix", func(t *testing.T) {
+		id := generateID("hail", "TX", 31.02, -98.44, "1510")
+		assert.True(t, strings.HasPrefix(id, "hail-"))
+	})
+
+	t.Run("deterministic", func(t *testing.T) {
+		id1 := generateID("wind", "OK", 34.94, -95.77, "1251")
+		id2 := generateID("wind", "OK", 34.94, -95.77, "1251")
+		assert.Equal(t, id1, id2)
+	})
+
+	t.Run("different inputs produce different IDs", func(t *testing.T) {
+		id1 := generateID("hail", "TX", 31.02, -98.44, "1510")
+		id2 := generateID("hail", "TX", 31.02, -98.44, "1511")
+		assert.NotEqual(t, id1, id2)
+	})
+
+	t.Run("empty type", func(t *testing.T) {
+		id := generateID("", "TX", 31.02, -98.44, "1510")
+		assert.NotEmpty(t, id)
+		// No type prefix, just the hex hash
+		assert.False(t, strings.Contains(id, "hail"))
 	})
 }
 
@@ -67,7 +195,7 @@ func TestEnrichStormEvent(t *testing.T) {
 			Unit:      "in",
 			BeginTime: time.Date(2024, 4, 26, 15, 45, 0, 0, time.UTC),
 			Comments:  "Large hail reported (ABC)",
-			Location:  Location{Raw: "5.2 NW AUSTIN"},
+			Location:  Location{Raw: testLocationNW},
 		}
 
 		result := EnrichStormEvent(event)
@@ -80,7 +208,7 @@ func TestEnrichStormEvent(t *testing.T) {
 		assert.Equal(t, "AUSTIN", result.Location.Name)
 		assert.Equal(t, 5.2, result.Location.Distance)
 		assert.Equal(t, "NW", result.Location.Direction)
-		assert.Equal(t, "2024-04-26T15:00:00Z", result.TimeBucket)
+		assert.Equal(t, testTimeBucket, result.TimeBucket)
 		assert.Equal(t, fixedTime, result.ProcessedAt)
 	})
 
@@ -128,7 +256,7 @@ func TestNormalizeEventType(t *testing.T) {
 		{"with spaces rejected", "  hail  ", ""},
 		{"uppercase wind rejected", "WIND", ""},
 		{"uppercase tornado rejected", "TORNADO", ""},
-		{"unknown type", "snow", ""},
+		{testUnknown, "snow", ""},
 		{"empty string", "", ""},
 	}
 
@@ -152,7 +280,7 @@ func TestNormalizeUnit(t *testing.T) {
 		{"hail default", "hail", "", "in"},
 		{"wind default", "wind", "", "mph"},
 		{"tornado default", "tornado", "", "f_scale"},
-		{"unknown type", "earthquake", "", ""},
+		{testUnknown, "earthquake", "", ""},
 		{"empty type and unit", "", "", ""},
 	}
 
@@ -179,7 +307,7 @@ func TestNormalizeMagnitude(t *testing.T) {
 		{"wind no conversion", "wind", 85, "mph", 85},
 		{"tornado no conversion", "tornado", 3, "f_scale", 3},
 		{"zero magnitude", "hail", 0, "in", 0},
-		{"unknown type", "snow", 100, "in", 100},
+		{testUnknown, "snow", 100, "in", 100},
 	}
 
 	for _, tt := range tests {
@@ -224,7 +352,7 @@ func TestDeriveSeverity(t *testing.T) {
 
 		// Edge cases
 		{"zero magnitude", "hail", 0, ""},
-		{"unknown type", "earthquake", 5.5, ""},
+		{testUnknown, "earthquake", 5.5, ""},
 		{"empty type", "", 100, ""},
 	}
 
@@ -272,7 +400,7 @@ func TestParseLocation(t *testing.T) {
 		expectedDirection string
 	}{
 		{"valid N direction", "5 N AUSTIN", "AUSTIN", 5.0, "N"},
-		{"valid NW direction", "5.2 NW AUSTIN", "AUSTIN", 5.2, "NW"},
+		{"valid NW direction", testLocationNW, "AUSTIN", 5.2, "NW"},
 		{"valid NNE direction", "10.5 NNE SAN ANTONIO", "SAN ANTONIO", 10.5, "NNE"},
 		{"valid with city name", "3.7 SW HOUSTON", "HOUSTON", 3.7, "SW"},
 		{"decimal distance", "2.25 E DALLAS", "DALLAS", 2.25, "E"},
@@ -303,12 +431,12 @@ func TestDeriveTimeBucket(t *testing.T) {
 		{
 			"hour boundary",
 			time.Date(2024, 4, 26, 15, 0, 0, 0, time.UTC),
-			"2024-04-26T15:00:00Z",
+			testTimeBucket,
 		},
 		{
 			"truncate to hour",
 			time.Date(2024, 4, 26, 15, 45, 30, 500, time.UTC),
-			"2024-04-26T15:00:00Z",
+			testTimeBucket,
 		},
 		{
 			"different timezone",
@@ -335,7 +463,7 @@ func TestSerializeStormEvent(t *testing.T) {
 
 	t.Run("successful serialization", func(t *testing.T) {
 		event := StormEvent{
-			ID:          "evt-123",
+			ID:          testEventID,
 			EventType:   "hail",
 			Magnitude:   1.5,
 			Unit:        "in",
@@ -346,12 +474,12 @@ func TestSerializeStormEvent(t *testing.T) {
 		result, err := SerializeStormEvent(event)
 
 		require.NoError(t, err)
-		assert.Equal(t, []byte("evt-123"), result.Key)
+		assert.Equal(t, []byte(testEventID), result.Key)
 
 		var unmarshaled StormEvent
 		err = json.Unmarshal(result.Value, &unmarshaled)
 		require.NoError(t, err)
-		assert.Equal(t, "evt-123", unmarshaled.ID)
+		assert.Equal(t, testEventID, unmarshaled.ID)
 		assert.Equal(t, "hail", unmarshaled.EventType)
 		assert.Equal(t, 1.5, unmarshaled.Magnitude)
 
@@ -381,7 +509,7 @@ func TestSerializeStormEvent(t *testing.T) {
 				Lon: -97.7431,
 			},
 			Location: Location{
-				Raw:       "5.2 NW AUSTIN",
+				Raw:       testLocationNW,
 				Name:      "AUSTIN",
 				Distance:  5.2,
 				Direction: "NW",

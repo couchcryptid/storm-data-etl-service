@@ -34,10 +34,10 @@ Output binary: `bin/etl`
 ### Unit Tests
 
 ```sh
-make test
+make test-unit
 ```
 
-Runs all tests with the race detector enabled (`-race -count=1`).
+Runs unit tests with the race detector enabled (`-race -count=1`).
 
 ### Coverage
 
@@ -49,10 +49,10 @@ Generates `coverage.out` and opens an HTML coverage report in the browser.
 
 ### Integration Tests
 
-Integration tests use [testcontainers-go](https://github.com/testcontainers/testcontainers-go) to spin up the full Docker Compose stack (Zookeeper, Kafka, ETL service) and verify end-to-end message flow.
+Integration tests use [testcontainers-go](https://github.com/testcontainers/testcontainers-go) to spin up Kafka and verify end-to-end message flow.
 
 ```sh
-go test -tags=integration ./internal/integration/... -v -count=1
+make test-integration
 ```
 
 These tests require Docker to be running and may take 1-2 minutes to start the containers.
@@ -103,11 +103,11 @@ The `.github/workflows/ci.yml` workflow runs on pushes and pull requests to `mai
 
 | Job | What It Does |
 |---|---|
-| `test` | `go test ./... -race -count=1` |
-| `lint` | `golangci-lint` with the project config |
-| `build` | `go build ./cmd/etl` (compile check) |
+| `test-unit` | `make test-unit` (unit tests with race detector) |
+| `lint` | `make lint` (golangci-lint with the project config) |
+| `build` | `make build` (compile check) |
 
-A separate `semantic-release` workflow handles versioning and GitHub releases on merges to `main`.
+A separate `release.yml` workflow (triggered by CI success on `main`) handles versioning, GitHub releases, and Docker image publishing.
 
 ## Project Conventions
 

@@ -2,7 +2,7 @@
 
 ## Docker Compose (Local Development)
 
-The `compose.yml` at the repo root runs the full stack: Zookeeper, Kafka, and the ETL service.
+The `compose.yml` at the repo root runs the full stack: Kafka (KRaft mode) and the ETL service.
 
 ### Start
 
@@ -17,7 +17,7 @@ docker compose up --build
 docker compose down
 ```
 
-To remove volumes (Kafka data, Zookeeper state):
+To remove volumes (Kafka data):
 
 ```sh
 docker compose down -v
@@ -27,25 +27,22 @@ docker compose down -v
 
 | Service | Image | Port | Description |
 |---|---|---|---|
-| `zookeeper` | `confluentinc/cp-zookeeper:7.7.0` | 2181 | Kafka coordination |
-| `kafka` | `confluentinc/cp-kafka:7.7.0` | 9092 | Message broker |
+| `kafka` | `apache/kafka:3.7.0` | 29092 | Message broker (KRaft, no Zookeeper) |
 | `storm-data-etl` | Built from `Dockerfile` | 8080 | ETL service |
 
 ### Health Checks
 
 All services have health checks configured:
 
-- **Zookeeper**: TCP check on port 2181
 - **Kafka**: `kafka-topics --list` against the internal listener
 - **ETL**: HTTP `GET /healthz`
 
-Services start in dependency order: Zookeeper -> Kafka (waits for healthy Zookeeper) -> ETL (waits for healthy Kafka).
+Services start in dependency order: Kafka -> ETL (waits for healthy Kafka).
 
 ### Resource Limits
 
 | Service | Memory Limit | Memory Reservation |
 |---|---|---|
-| Zookeeper | 512 MB | 256 MB |
 | Kafka | 1 GB | 512 MB |
 | ETL | 256 MB | 128 MB |
 
@@ -80,20 +77,19 @@ docker run -p 8080:8080 \
 |---|---|---|
 | `.env.example` | Reference | Template for the ETL service config (includes Mapbox geocoding vars) |
 | `.env` | `storm-data-etl` container | Actual ETL config (gitignored) |
-| `.env.kafka` | `kafka` container | Kafka broker settings (listeners, replication) |
-| `.env.zookeeper` | `zookeeper` container | Zookeeper client port and tick time |
+| `.env.kafka` | `kafka` container | Kafka KRaft broker settings (listeners, controller, replication) |
 
 ### Kafka Environment (.env.kafka)
 
 Key settings:
 
-- `KAFKA_ADVERTISED_LISTENERS`: Exposes both an internal listener (`kafka:29092` for inter-container traffic) and an external listener (`localhost:9092` for host access)
+- `KAFKA_ADVERTISED_LISTENERS`: Exposes both an internal listener (`kafka:9092` for inter-container traffic) and a host-accessible listener (`localhost:29092` for host access)
 - `KAFKA_AUTO_CREATE_TOPICS_ENABLE=true`: Topics are auto-created when the service starts consuming/producing
 - `KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1`: Single-node setup for local development
 
 ## Production Considerations
 
-- Replace the single-node Kafka/Zookeeper setup with a managed Kafka service or multi-broker cluster
+- Replace the single-node Kafka setup with a managed Kafka service or multi-broker cluster
 - Set `KAFKA_AUTO_CREATE_TOPICS_ENABLE=false` and pre-create topics with appropriate partition counts and replication factors
 - Configure `KAFKA_GROUP_ID` per environment to isolate consumer groups
 - Set `LOG_FORMAT=json` for structured log aggregation

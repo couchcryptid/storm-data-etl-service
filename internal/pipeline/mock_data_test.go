@@ -3,11 +3,9 @@ package pipeline_test
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log/slog"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -25,35 +23,13 @@ func TestStormTransformer_WithMockJSONData(t *testing.T) {
 	baseDate := time.Date(2024, time.April, 26, 0, 0, 0, 0, time.UTC)
 
 	cases := []struct {
-		name          string
-		eventType     string
-		expectedType  string
-		magnitudeKey  string
-		unit          string
-		convertHailIn bool
+		name         string
+		eventType    string
+		expectedUnit string
 	}{
-		{
-			name:          "hail",
-			eventType:     "hail",
-			expectedType:  "hail",
-			magnitudeKey:  "Size",
-			unit:          "in",
-			convertHailIn: true,
-		},
-		{
-			name:         "tornado",
-			eventType:    "tornado",
-			expectedType: "tornado",
-			magnitudeKey: "F_Scale",
-			unit:         "f_scale",
-		},
-		{
-			name:         "wind",
-			eventType:    "wind",
-			expectedType: "wind",
-			magnitudeKey: "Speed",
-			unit:         "mph",
-		},
+		{name: "hail", eventType: "hail", expectedUnit: "in"},
+		{name: "tornado", eventType: "tornado", expectedUnit: "f_scale"},
+		{name: "wind", eventType: "wind", expectedUnit: "mph"},
 	}
 
 	rows := readCombinedRows(t)
@@ -63,24 +39,22 @@ func TestStormTransformer_WithMockJSONData(t *testing.T) {
 			filtered := filterRowsByType(rows, tc.eventType)
 			require.Len(t, filtered, 10)
 
-			for i, row := range filtered {
-				event := stormEventFromRow(t, row, tc.eventType, tc.magnitudeKey, tc.unit, tc.convertHailIn, baseDate, i)
-				raw := rawEventFromStormEvent(t, event)
+			for _, row := range filtered {
+				raw := rawEventFromCSVRow(t, row, baseDate)
 
 				out, err := transformer.Transform(context.Background(), raw)
 				require.NoError(t, err)
-				assert.Equal(t, []byte(event.ID), out.Key)
-				assert.Equal(t, tc.expectedType, out.Headers["type"])
+				assert.NotEmpty(t, out.Key)
+				assert.Equal(t, tc.eventType, out.Headers["type"])
 				assert.NotEmpty(t, out.Headers["processed_at"])
 
 				var roundtrip domain.StormEvent
 				require.NoError(t, json.Unmarshal(out.Value, &roundtrip))
-				assert.Equal(t, event.ID, roundtrip.ID)
-				assert.Equal(t, tc.expectedType, roundtrip.EventType)
-				assert.Equal(t, event.Location.State, roundtrip.Location.State)
-				assert.Equal(t, event.Location.County, roundtrip.Location.County)
-				assert.Equal(t, event.Geo.Lat, roundtrip.Geo.Lat)
-				assert.Equal(t, event.Geo.Lon, roundtrip.Geo.Lon)
+				assert.Equal(t, tc.eventType, roundtrip.EventType)
+				assert.Equal(t, tc.expectedUnit, roundtrip.Unit)
+				assert.Equal(t, row["State"], roundtrip.Location.State)
+				assert.Equal(t, row["County"], roundtrip.Location.County)
+				assert.True(t, strings.HasPrefix(roundtrip.ID, tc.eventType+"-"))
 			}
 		})
 	}
@@ -108,96 +82,16 @@ func filterRowsByType(rows []mockJSONRow, eventType string) []mockJSONRow {
 	return filtered
 }
 
-func stormEventFromRow(
-	t *testing.T,
-	row mockJSONRow,
-	eventType string,
-	magnitudeKey string,
-	unit string,
-	convertHailIn bool,
-	baseDate time.Time,
-	index int,
-) domain.StormEvent {
+// rawEventFromCSVRow marshals the raw CSV row directly as JSON — the same format
+// the collector produces — and wraps it in a RawEvent with a Kafka-style timestamp.
+func rawEventFromCSVRow(t *testing.T, row mockJSONRow, baseDate time.Time) domain.RawEvent {
 	t.Helper()
-
-	lat := parseFloat(row["Lat"])
-	lon := parseFloat(row["Lon"])
-	magnitude := parseMagnitude(row[magnitudeKey], convertHailIn)
-	beginTime := parseTime(baseDate, row["Time"])
-
-	return domain.StormEvent{
-		ID:         fmt.Sprintf("%s-%d", eventType, index+1),
-		EventType:  eventType,
-		Geo:        domain.Geo{Lat: lat, Lon: lon},
-		Magnitude:  magnitude,
-		Unit:       unit,
-		BeginTime:  beginTime,
-		EndTime:    beginTime,
-		Source:     "mock",
-		Location:   domain.Location{Raw: row["Location"], State: row["State"], County: row["County"]},
-		Comments:   row["Comments"],
-		RawPayload: nil,
-	}
-}
-
-func rawEventFromStormEvent(t *testing.T, event domain.StormEvent) domain.RawEvent {
-	t.Helper()
-	payload, err := json.Marshal(event)
+	payload, err := json.Marshal(row)
 	require.NoError(t, err)
 
 	return domain.RawEvent{
-		Key:   []byte(event.ID),
-		Value: payload,
-		Topic: "raw-weather-reports",
+		Value:     payload,
+		Topic:     "raw-weather-reports",
+		Timestamp: baseDate,
 	}
-}
-
-func parseFloat(value string) float64 {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		return 0
-	}
-	parsed, err := strconv.ParseFloat(value, 64)
-	if err != nil {
-		return 0
-	}
-	return parsed
-}
-
-func parseMagnitude(value string, convertHailIn bool) float64 {
-	value = strings.TrimSpace(value)
-	if value == "" || strings.EqualFold(value, "UNK") {
-		return 0
-	}
-	value = strings.TrimPrefix(value, "EF")
-	value = strings.TrimPrefix(value, "F")
-
-	parsed, err := strconv.ParseFloat(value, 64)
-	if err != nil {
-		return 0
-	}
-
-	if convertHailIn && parsed >= 10 {
-		return parsed / 100.0
-	}
-
-	return parsed
-}
-
-func parseTime(baseDate time.Time, hhmm string) time.Time {
-	hhmm = strings.TrimSpace(hhmm)
-	if len(hhmm) < 3 {
-		return baseDate
-	}
-	if len(hhmm) == 3 {
-		hhmm = "0" + hhmm
-	}
-
-	hour, errHour := strconv.Atoi(hhmm[:2])
-	minutes, errMin := strconv.Atoi(hhmm[2:])
-	if errHour != nil || errMin != nil {
-		return baseDate
-	}
-
-	return time.Date(baseDate.Year(), baseDate.Month(), baseDate.Day(), hour, minutes, 0, 0, baseDate.Location())
 }

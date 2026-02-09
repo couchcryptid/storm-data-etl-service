@@ -1,5 +1,9 @@
 {
   "gopls": {
     "build.buildFlags": ["-tags=integration"]
+  },
+  "sonarlint.connectedMode.project": {
+    "connectionId": "couchcryptid",
+    "projectKey": "couchcryptid_storm-data-etl-service"
   }
 }

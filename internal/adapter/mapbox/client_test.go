@@ -15,13 +15,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	testToken         = "test-token"
+	contentTypeJSON   = "application/json"
+	headerContentType = "Content-Type"
+)
+
 func testMetrics() *observability.Metrics {
 	return observability.NewMetricsForTesting()
 }
 
 func testClient(baseURL string) *Client {
 	return &Client{
-		token:      "test-token",
+		token:      testToken,
 		httpClient: &http.Client{Timeout: 5 * time.Second},
 		baseURL:    baseURL,
 		metrics:    testMetrics(),
@@ -33,7 +39,7 @@ func TestClient_ForwardGeocode_Success(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Contains(t, r.URL.Path, "AUSTIN")
 		assert.Equal(t, "1", r.URL.Query().Get("limit"))
-		assert.Equal(t, "test-token", r.URL.Query().Get("access_token"))
+		assert.Equal(t, testToken, r.URL.Query().Get("access_token"))
 
 		resp := response{
 			Features: []feature{
@@ -45,7 +51,7 @@ func TestClient_ForwardGeocode_Success(t *testing.T) {
 				},
 			},
 		}
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set(headerContentType, contentTypeJSON)
 		require.NoError(t, json.NewEncoder(w).Encode(resp))
 	}))
 	defer srv.Close()
@@ -73,7 +79,7 @@ func TestClient_ReverseGeocode_Success(t *testing.T) {
 				},
 			},
 		}
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set(headerContentType, contentTypeJSON)
 		require.NoError(t, json.NewEncoder(w).Encode(resp))
 	}))
 	defer srv.Close()
@@ -89,7 +95,7 @@ func TestClient_ReverseGeocode_Success(t *testing.T) {
 
 func TestClient_ForwardGeocode_NoResults(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set(headerContentType, contentTypeJSON)
 		require.NoError(t, json.NewEncoder(w).Encode(response{Features: []feature{}}))
 	}))
 	defer srv.Close()
@@ -129,7 +135,7 @@ func TestClient_ForwardGeocode_Timeout(t *testing.T) {
 	defer srv.Close()
 
 	c := &Client{
-		token:      "test-token",
+		token:      testToken,
 		httpClient: &http.Client{Timeout: 50 * time.Millisecond},
 		baseURL:    srv.URL,
 		metrics:    testMetrics(),

@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"regexp"
@@ -20,13 +22,105 @@ var (
 )
 
 // ParseRawEvent deserializes a RawEvent's value into a StormEvent.
+// It expects the flat CSV-style JSON produced by the collector service.
 func ParseRawEvent(raw RawEvent) (StormEvent, error) {
-	var event StormEvent
-	if err := json.Unmarshal(raw.Value, &event); err != nil {
+	var rec RawCSVRecord
+	if err := json.Unmarshal(raw.Value, &rec); err != nil {
 		return StormEvent{}, fmt.Errorf("parse raw event: %w", err)
 	}
-	event.RawPayload = raw.Value
-	return event, nil
+
+	lat := parseFloatOrZero(rec.Lat)
+	lon := parseFloatOrZero(rec.Lon)
+	magnitude := parseMagnitudeField(rec.Type, rec.Size, rec.FScale, rec.Speed)
+	beginTime := parseHHMM(raw.Timestamp, rec.Time)
+
+	return StormEvent{
+		ID:        generateID(rec.Type, rec.State, lat, lon, rec.Time),
+		EventType: rec.Type,
+		Geo:       Geo{Lat: lat, Lon: lon},
+		Magnitude: magnitude,
+		BeginTime: beginTime,
+		EndTime:   beginTime,
+		Location:  Location{Raw: rec.Location, State: rec.State, County: rec.County},
+		Comments:  rec.Comments,
+
+		RawPayload: raw.Value,
+	}, nil
+}
+
+// parseFloatOrZero parses a string as float64, returning 0 on failure.
+func parseFloatOrZero(s string) float64 {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return 0
+	}
+	v, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		return 0
+	}
+	return v
+}
+
+// parseMagnitudeField selects and parses the correct magnitude column based on event type.
+// Returns 0 for unknown values like "UNK".
+func parseMagnitudeField(eventType, size, fScale, speed string) float64 {
+	var raw string
+	switch eventType {
+	case "hail":
+		raw = size
+	case "tornado":
+		raw = fScale
+	case "wind":
+		raw = speed
+	default:
+		return 0
+	}
+
+	raw = strings.TrimSpace(raw)
+	if raw == "" || strings.EqualFold(raw, "UNK") {
+		return 0
+	}
+	raw = strings.TrimPrefix(raw, "EF")
+	raw = strings.TrimPrefix(raw, "F")
+
+	v, err := strconv.ParseFloat(raw, 64)
+	if err != nil {
+		return 0
+	}
+	return v
+}
+
+// parseHHMM combines a base date with an HHMM time string (e.g. "1510" → 15:10).
+func parseHHMM(baseDate time.Time, hhmm string) time.Time {
+	hhmm = strings.TrimSpace(hhmm)
+	if len(hhmm) < 3 {
+		return baseDate
+	}
+	if len(hhmm) == 3 {
+		hhmm = "0" + hhmm
+	}
+
+	hour, errH := strconv.Atoi(hhmm[:2])
+	mins, errM := strconv.Atoi(hhmm[2:])
+	if errH != nil || errM != nil || hour < 0 || hour > 23 || mins < 0 || mins > 59 {
+		return baseDate
+	}
+
+	return time.Date(
+		baseDate.Year(), baseDate.Month(), baseDate.Day(),
+		hour, mins, 0, 0, time.UTC,
+	)
+}
+
+// generateID produces a deterministic ID from the event's key fields.
+func generateID(eventType, state string, lat, lon float64, timeStr string) string {
+	input := fmt.Sprintf("%s|%s|%.4f|%.4f|%s", eventType, state, lat, lon, timeStr)
+	hash := sha256.Sum256([]byte(input))
+	short := hex.EncodeToString(hash[:8])
+	if eventType == "" {
+		return short
+	}
+	return eventType + "-" + short
 }
 
 // EnrichStormEvent normalizes, classifies, and enriches a parsed storm event.

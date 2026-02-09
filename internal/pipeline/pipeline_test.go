@@ -79,7 +79,7 @@ func TestPipeline_Run_HappyPath(t *testing.T) {
 	require.NoError(t, err)
 	assert.Len(t, ldr.loaded, 1)
 	assert.Equal(t, raw.Value, ldr.loaded[0].Value)
-	assert.True(t, p.Ready())
+	assert.NoError(t, p.CheckReadiness(context.Background()))
 }
 
 func TestPipeline_Run_ContextCancellation(t *testing.T) {
@@ -114,7 +114,7 @@ func TestPipeline_Run_TransformError(t *testing.T) {
 	err := p.Run(ctx)
 	require.NoError(t, err)
 	assert.Empty(t, ldr.loaded)
-	assert.False(t, p.Ready())
+	assert.Error(t, p.CheckReadiness(context.Background()))
 }
 
 func TestPipeline_Run_CommitsAfterLoad(t *testing.T) {
@@ -143,21 +143,22 @@ func TestPipeline_Run_CommitsAfterLoad(t *testing.T) {
 }
 
 func TestStormTransformer_Transform(t *testing.T) {
-	raw := makeRawEvent(t, "evt-3", "tornado")
+	raw := makeRawCSVEvent(t, "tornado", "EF3")
 
 	tfm := pipeline.NewTransformer(nil, slog.Default())
 	out, err := tfm.Transform(context.Background(), raw)
 	require.NoError(t, err)
-	assert.Equal(t, []byte("evt-3"), out.Key)
+	assert.NotEmpty(t, out.Key)
 	assert.Contains(t, string(out.Value), `"type":"tornado"`)
 }
 
 func TestDomain_ParseRawEvent(t *testing.T) {
-	raw := makeRawEvent(t, "evt-4", "wind")
+	raw := makeRawCSVEvent(t, "wind", "65")
 	event, err := domain.ParseRawEvent(raw)
 	require.NoError(t, err)
-	assert.Equal(t, "evt-4", event.ID)
+	assert.NotEmpty(t, event.ID)
 	assert.Equal(t, "wind", event.EventType)
+	assert.Equal(t, 65.0, event.Magnitude)
 	assert.True(t, event.ProcessedAt.IsZero())
 }
 
@@ -239,6 +240,35 @@ func TestDomain_SerializeStormEvent(t *testing.T) {
 }
 
 // --- helpers ---
+
+func makeRawCSVEvent(t *testing.T, eventType, magnitude string) domain.RawEvent {
+	t.Helper()
+	row := map[string]string{
+		"Time":     "1510",
+		"Location": "8 ESE Chappel",
+		"County":   "San Saba",
+		"State":    "TX",
+		"Lat":      "31.02",
+		"Lon":      "-98.44",
+		"Comments": "Test report. (SJT)",
+		"Type":     eventType,
+	}
+	switch eventType {
+	case "hail":
+		row["Size"] = magnitude
+	case "tornado":
+		row["F_Scale"] = magnitude
+	case "wind":
+		row["Speed"] = magnitude
+	}
+	data, err := json.Marshal(row)
+	require.NoError(t, err)
+	return domain.RawEvent{
+		Value:     data,
+		Topic:     "raw-weather-reports",
+		Timestamp: time.Date(2024, 4, 26, 0, 0, 0, 0, time.UTC),
+	}
+}
 
 func makeRawEvent(t *testing.T, id, eventType string) domain.RawEvent {
 	t.Helper()

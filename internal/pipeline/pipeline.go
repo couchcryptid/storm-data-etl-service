@@ -2,6 +2,7 @@ package pipeline
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"sync/atomic"
 	"time"
@@ -46,9 +47,13 @@ func New(e Extractor, t Transformer, l Loader, logger *slog.Logger, metrics *obs
 	}
 }
 
-// Ready reports whether the pipeline has successfully processed at least one message.
-func (p *Pipeline) Ready() bool {
-	return p.ready.Load()
+// CheckReadiness returns nil if the pipeline has processed at least one message,
+// or an error describing why the service is not yet ready.
+func (p *Pipeline) CheckReadiness(_ context.Context) error {
+	if !p.ready.Load() {
+		return errors.New("pipeline has not processed any messages yet")
+	}
+	return nil
 }
 
 // Run executes the ETL loop until the context is cancelled.
@@ -72,14 +77,10 @@ func (p *Pipeline) Run(ctx context.Context) error {
 
 		raw, err := p.extractor.Extract(ctx)
 		if err != nil {
-			if ctx.Err() != nil {
-				return nil
-			}
 			p.logger.Error("extract failed", "error", err)
-			if !sleepWithContext(ctx, backoff) {
+			if !p.backoffOrStop(ctx, &backoff, maxBackoff) {
 				return nil
 			}
-			backoff = nextBackoff(backoff, maxBackoff)
 			continue
 		}
 		p.metrics.MessagesConsumed.Inc()
@@ -94,30 +95,46 @@ func (p *Pipeline) Run(ctx context.Context) error {
 				"offset", raw.Offset,
 			)
 			p.metrics.TransformErrors.Inc()
+			p.commitOffset(ctx, raw)
 			continue
 		}
 
 		if err := p.loader.Load(ctx, out); err != nil {
-			if ctx.Err() != nil {
-				return nil
-			}
 			p.logger.Error("load failed", "error", err)
-			if !sleepWithContext(ctx, backoff) {
+			if !p.backoffOrStop(ctx, &backoff, maxBackoff) {
 				return nil
 			}
-			backoff = nextBackoff(backoff, maxBackoff)
 			continue
 		}
 		p.metrics.MessagesProduced.Inc()
-
-		if raw.Commit != nil {
-			if err := raw.Commit(ctx); err != nil {
-				p.logger.Warn("commit offset failed", "error", err, "topic", raw.Topic, "partition", raw.Partition, "offset", raw.Offset)
-			}
-		}
+		p.commitOffset(ctx, raw)
 
 		p.metrics.ProcessingDuration.Observe(time.Since(start).Seconds())
 		p.ready.Store(true)
+	}
+}
+
+// backoffOrStop checks for context cancellation, sleeps with the current backoff,
+// and advances the backoff. Returns false if the pipeline should stop.
+func (p *Pipeline) backoffOrStop(ctx context.Context, backoff *time.Duration, maxBackoff time.Duration) bool {
+	if ctx.Err() != nil {
+		return false
+	}
+	if !sleepWithContext(ctx, *backoff) {
+		return false
+	}
+	*backoff = nextBackoff(*backoff, maxBackoff)
+	return true
+}
+
+// commitOffset commits the message offset if a commit function is available.
+func (p *Pipeline) commitOffset(ctx context.Context, raw domain.RawEvent) {
+	if raw.Commit == nil {
+		return
+	}
+	if err := raw.Commit(ctx); err != nil {
+		p.logger.Warn("commit offset failed", "error", err,
+			"topic", raw.Topic, "partition", raw.Partition, "offset", raw.Offset)
 	}
 }
 
