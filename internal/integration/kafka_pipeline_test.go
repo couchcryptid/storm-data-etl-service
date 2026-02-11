@@ -66,10 +66,11 @@ func TestKafkaReaderWriter(t *testing.T) {
 	createTopic(t, broker, testSinkTopic)
 
 	cfg := &config.Config{
-		KafkaBrokers:     []string{broker},
-		KafkaSourceTopic: testSourceTopic,
-		KafkaSinkTopic:   testSinkTopic,
-		KafkaGroupID:     fmt.Sprintf("test-reader-%d", time.Now().UnixNano()),
+		KafkaBrokers:       []string{broker},
+		KafkaSourceTopic:   testSourceTopic,
+		KafkaSinkTopic:     testSinkTopic,
+		KafkaGroupID:       fmt.Sprintf("test-reader-%d", time.Now().UnixNano()),
+		BatchFlushInterval: 5 * time.Second,
 	}
 
 	// Publish a raw CSV record to the source topic.
@@ -92,11 +93,25 @@ func TestKafkaReaderWriter(t *testing.T) {
 	}))
 
 	// Extract via kafka.Reader.
+	// Retry because the consumer group may need time to rebalance before
+	// partitions are assigned and messages become available.
 	reader := kafka.NewReader(cfg, discardLogger())
 	t.Cleanup(func() { _ = reader.Close() })
 
-	raw, err := reader.Extract(ctx)
-	require.NoError(t, err)
+	var batch []domain.RawEvent
+	for {
+		var err error
+		batch, err = reader.ExtractBatch(ctx, 1)
+		require.NoError(t, err)
+		if len(batch) > 0 {
+			break
+		}
+		if ctx.Err() != nil {
+			t.Fatal("timed out waiting for message from source topic")
+		}
+	}
+	require.Len(t, batch, 1)
+	raw := batch[0]
 	assert.Equal(t, []byte("test-key"), raw.Key)
 	assert.Equal(t, payload, raw.Value)
 	assert.Equal(t, testSourceTopic, raw.Topic)
@@ -114,7 +129,7 @@ func TestKafkaReaderWriter(t *testing.T) {
 	writer := kafka.NewWriter(cfg, discardLogger())
 	t.Cleanup(func() { _ = writer.Close() })
 
-	require.NoError(t, writer.Load(ctx, out))
+	require.NoError(t, writer.LoadBatch(ctx, []domain.OutputEvent{out}))
 
 	// Read from the sink topic and verify headers + value.
 	consumer := kafkago.NewReader(kafkago.ReaderConfig{
@@ -150,10 +165,11 @@ func TestPipelineEndToEnd(t *testing.T) {
 	createTopic(t, broker, testSinkTopic)
 
 	cfg := &config.Config{
-		KafkaBrokers:     []string{broker},
-		KafkaSourceTopic: testSourceTopic,
-		KafkaSinkTopic:   testSinkTopic,
-		KafkaGroupID:     fmt.Sprintf("test-pipeline-%d", time.Now().UnixNano()),
+		KafkaBrokers:       []string{broker},
+		KafkaSourceTopic:   testSourceTopic,
+		KafkaSinkTopic:     testSinkTopic,
+		KafkaGroupID:       fmt.Sprintf("test-pipeline-%d", time.Now().UnixNano()),
+		BatchFlushInterval: 5 * time.Second,
 	}
 
 	// Publish all mock CSV records to the source topic.
@@ -188,7 +204,7 @@ func TestPipelineEndToEnd(t *testing.T) {
 	t.Cleanup(func() { _ = writer.Close() })
 
 	metrics := observability.NewMetricsForTesting()
-	p := pipeline.New(reader, transformer, writer, discardLogger(), metrics)
+	p := pipeline.New(reader, transformer, writer, discardLogger(), metrics, 50)
 
 	// Run the pipeline in a goroutine.
 	pipelineCtx, pipelineCancel := context.WithCancel(ctx)
@@ -281,10 +297,11 @@ func TestPipelineTransformError(t *testing.T) {
 	createTopic(t, broker, testSinkTopic)
 
 	cfg := &config.Config{
-		KafkaBrokers:     []string{broker},
-		KafkaSourceTopic: testSourceTopic,
-		KafkaSinkTopic:   testSinkTopic,
-		KafkaGroupID:     fmt.Sprintf("test-poison-%d", time.Now().UnixNano()),
+		KafkaBrokers:       []string{broker},
+		KafkaSourceTopic:   testSourceTopic,
+		KafkaSinkTopic:     testSinkTopic,
+		KafkaGroupID:       fmt.Sprintf("test-poison-%d", time.Now().UnixNano()),
+		BatchFlushInterval: 5 * time.Second,
 	}
 
 	baseDate := time.Date(2024, time.April, 26, 0, 0, 0, 0, time.UTC)
@@ -315,7 +332,7 @@ func TestPipelineTransformError(t *testing.T) {
 	t.Cleanup(func() { _ = writer.Close() })
 
 	metrics := observability.NewMetricsForTesting()
-	p := pipeline.New(reader, transformer, writer, discardLogger(), metrics)
+	p := pipeline.New(reader, transformer, writer, discardLogger(), metrics, 50)
 
 	pipelineCtx, pipelineCancel := context.WithCancel(ctx)
 	errCh := make(chan error, 1)
