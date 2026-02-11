@@ -4,8 +4,9 @@ import (
 	"errors"
 	"os"
 	"strconv"
-	"strings"
 	"time"
+
+	sharedcfg "github.com/couchcryptid/storm-data-shared/config"
 )
 
 // Config holds all service settings, populated from environment variables.
@@ -31,24 +32,23 @@ type Config struct {
 
 // Load reads configuration from environment variables, applying defaults where unset.
 func Load() (*Config, error) {
-	shutdownStr := envOrDefault("SHUTDOWN_TIMEOUT", "10s")
-	shutdownTimeout, err := time.ParseDuration(shutdownStr)
-	if err != nil || shutdownTimeout <= 0 {
-		return nil, errors.New("invalid SHUTDOWN_TIMEOUT")
+	shutdownTimeout, err := sharedcfg.ParseShutdownTimeout()
+	if err != nil {
+		return nil, err
 	}
 
-	mapboxTimeoutStr := envOrDefault("MAPBOX_TIMEOUT", "5s")
+	mapboxTimeoutStr := sharedcfg.EnvOrDefault("MAPBOX_TIMEOUT", "5s")
 	mapboxTimeout, err2 := time.ParseDuration(mapboxTimeoutStr)
 	if err2 != nil || mapboxTimeout <= 0 {
 		return nil, errors.New("invalid MAPBOX_TIMEOUT")
 	}
 
-	batchSize, err := parseBatchSize()
+	batchSize, err := sharedcfg.ParseBatchSize()
 	if err != nil {
 		return nil, err
 	}
 
-	flushInterval, err := parseBatchFlushInterval()
+	flushInterval, err := sharedcfg.ParseBatchFlushInterval()
 	if err != nil {
 		return nil, err
 	}
@@ -62,13 +62,13 @@ func Load() (*Config, error) {
 	}
 
 	cfg := &Config{
-		KafkaBrokers:       parseBrokers(envOrDefault("KAFKA_BROKERS", "localhost:9092")),
-		KafkaSourceTopic:   envOrDefault("KAFKA_SOURCE_TOPIC", "raw-weather-reports"),
-		KafkaSinkTopic:     envOrDefault("KAFKA_SINK_TOPIC", "transformed-weather-data"),
-		KafkaGroupID:       envOrDefault("KAFKA_GROUP_ID", "storm-data-etl"),
-		HTTPAddr:           envOrDefault("HTTP_ADDR", ":8080"),
-		LogLevel:           envOrDefault("LOG_LEVEL", "info"),
-		LogFormat:          envOrDefault("LOG_FORMAT", "json"),
+		KafkaBrokers:       sharedcfg.ParseBrokers(sharedcfg.EnvOrDefault("KAFKA_BROKERS", "localhost:9092")),
+		KafkaSourceTopic:   sharedcfg.EnvOrDefault("KAFKA_SOURCE_TOPIC", "raw-weather-reports"),
+		KafkaSinkTopic:     sharedcfg.EnvOrDefault("KAFKA_SINK_TOPIC", "transformed-weather-data"),
+		KafkaGroupID:       sharedcfg.EnvOrDefault("KAFKA_GROUP_ID", "storm-data-etl"),
+		HTTPAddr:           sharedcfg.EnvOrDefault("HTTP_ADDR", ":8080"),
+		LogLevel:           sharedcfg.EnvOrDefault("LOG_LEVEL", "info"),
+		LogFormat:          sharedcfg.EnvOrDefault("LOG_FORMAT", "json"),
 		ShutdownTimeout:    shutdownTimeout,
 		BatchSize:          batchSize,
 		BatchFlushInterval: flushInterval,
@@ -95,34 +95,6 @@ func Load() (*Config, error) {
 	return cfg, nil
 }
 
-func envOrDefault(key, fallback string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
-	}
-	return fallback
-}
-
-func parseBatchSize() (int, error) {
-	s := os.Getenv("BATCH_SIZE")
-	if s == "" {
-		return 50, nil
-	}
-	n, err := strconv.Atoi(s)
-	if err != nil || n < 1 || n > 1000 {
-		return 0, errors.New("invalid BATCH_SIZE: must be 1-1000")
-	}
-	return n, nil
-}
-
-func parseBatchFlushInterval() (time.Duration, error) {
-	s := envOrDefault("BATCH_FLUSH_INTERVAL", "500ms")
-	d, err := time.ParseDuration(s)
-	if err != nil || d <= 0 {
-		return 0, errors.New("invalid BATCH_FLUSH_INTERVAL: must be a positive duration")
-	}
-	return d, nil
-}
-
 func parseMapboxCacheSize() int {
 	if s := os.Getenv("MAPBOX_CACHE_SIZE"); s != "" {
 		if n, err := strconv.Atoi(s); err == nil && n > 0 {
@@ -130,16 +102,4 @@ func parseMapboxCacheSize() int {
 		}
 	}
 	return 1000
-}
-
-func parseBrokers(value string) []string {
-	parts := strings.Split(value, ",")
-	brokers := make([]string, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed != "" {
-			brokers = append(brokers, trimmed)
-		}
-	}
-	return brokers
 }

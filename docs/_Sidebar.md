@@ -5,4 +5,5 @@
 - [[Configuration]]
 - [[Deployment]]
 - [[Development]]
+- [[Code Quality]]
 - [[Enrichment Rules|Enrichment]]

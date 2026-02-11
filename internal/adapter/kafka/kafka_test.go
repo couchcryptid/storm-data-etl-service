@@ -7,6 +7,7 @@ import (
 	"github.com/couchcryptid/storm-data-etl/internal/domain"
 	kafkago "github.com/segmentio/kafka-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMapMessageToRawEvent(t *testing.T) {
@@ -34,20 +35,23 @@ func TestMapMessageToRawEvent(t *testing.T) {
 	assert.Equal(t, "noaa", raw.Headers["source"])
 }
 
-func TestMapOutputEventToMessage(t *testing.T) {
-	event := domain.OutputEvent{
-		Key:   []byte("key-1"),
-		Value: []byte(`{"id":"evt-1"}`),
-		Headers: map[string]string{
-			"event_type": "hail",
-		},
+func TestSerializeToMessage(t *testing.T) {
+	now := time.Date(2024, 4, 26, 15, 10, 0, 0, time.UTC)
+	event := domain.StormEvent{
+		ID:          "evt-1",
+		EventType:   "hail",
+		Geo:         domain.Geo{Lat: 35.0, Lon: -97.0},
+		ProcessedAt: now,
 	}
 
-	msg := mapOutputEventToMessage(event)
+	msg, err := serializeToMessage(event)
+	require.NoError(t, err)
 
-	assert.Equal(t, []byte("key-1"), msg.Key)
-	assert.JSONEq(t, `{"id":"evt-1"}`, string(msg.Value))
-	assert.Len(t, msg.Headers, 1)
+	assert.Equal(t, []byte("evt-1"), msg.Key)
+	assert.Contains(t, string(msg.Value), `"event_type":"hail"`)
+	assert.Len(t, msg.Headers, 2)
 	assert.Equal(t, "event_type", msg.Headers[0].Key)
 	assert.Equal(t, []byte("hail"), msg.Headers[0].Value)
+	assert.Equal(t, "processed_at", msg.Headers[1].Key)
+	assert.Equal(t, []byte(now.Format(time.RFC3339)), msg.Headers[1].Value)
 }

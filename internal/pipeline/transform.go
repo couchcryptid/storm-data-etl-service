@@ -23,14 +23,14 @@ func NewTransformer(geocoder domain.Geocoder, logger *slog.Logger) *StormTransfo
 	}
 }
 
-func (t *StormTransformer) Transform(ctx context.Context, raw domain.RawEvent) (domain.OutputEvent, error) {
+func (t *StormTransformer) Transform(ctx context.Context, raw domain.RawEvent) (domain.StormEvent, error) {
 	event, err := domain.ParseRawEvent(raw)
 	if err != nil {
-		return domain.OutputEvent{}, err
+		return domain.StormEvent{}, err
 	}
 
 	event = domain.EnrichStormEvent(event)
 	event = domain.EnrichWithGeocoding(ctx, event, t.geocoder, t.logger)
 
-	return domain.SerializeStormEvent(event)
+	return event, nil
 }

@@ -296,19 +296,3 @@ func deriveTimeBucket(t time.Time) time.Time {
 
 	return t.UTC().Truncate(time.Hour)
 }
-
-// SerializeStormEvent marshals a StormEvent into an OutputEvent.
-func SerializeStormEvent(event StormEvent) (OutputEvent, error) {
-	data, err := json.Marshal(event)
-	if err != nil {
-		return OutputEvent{}, fmt.Errorf("serialize storm event: %w", err)
-	}
-	return OutputEvent{
-		Key:   []byte(event.ID),
-		Value: data,
-		Headers: map[string]string{
-			"event_type":   event.EventType,
-			"processed_at": event.ProcessedAt.Format(time.RFC3339),
-		},
-	}, nil
-}

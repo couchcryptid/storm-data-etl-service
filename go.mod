@@ -3,7 +3,7 @@ module github.com/couchcryptid/storm-data-etl
 go 1.25.6
 
 require (
-	github.com/google/go-cmp v0.7.0
+	github.com/couchcryptid/storm-data-shared v0.0.0-20260211182606-5c0ac15abbdf
 	github.com/jonboulle/clockwork v0.5.0
 	github.com/prometheus/client_golang v1.23.2
 	github.com/segmentio/kafka-go v0.4.50

@@ -53,12 +53,12 @@ HTTP server for operational endpoints.
 
 ### `internal/observability`
 
-- **`logging.go`** -- Configurable structured logger (`slog`) with JSON or text output
+- **`logging.go`** -- Thin wrapper that delegates to [storm-data-shared](https://github.com/couchcryptid/storm-data-shared) `observability.NewLogger()` for structured `slog` logging
 - **`metrics.go`** -- Prometheus counter, histogram, and gauge definitions for pipeline and geocoding observability
 
 ### `internal/config`
 
-Environment-based configuration using `os.Getenv` with sensible defaults and validation.
+Environment-based configuration. Uses shared parsers from [storm-data-shared](https://github.com/couchcryptid/storm-data-shared) (`ParseShutdownTimeout`, `ParseBatchSize`, `ParseBatchFlushInterval`, `EnvOrDefault`, `ParseBrokers`) combined with ETL-specific settings (Mapbox geocoding, Kafka topics).
 
 ## Design Decisions
 
@@ -75,7 +75,7 @@ The Kafka reader uses `FetchMessage` + manual `CommitMessages` rather than auto-
 
 ### Backoff Strategy
 
-The pipeline uses exponential backoff (200ms to 5s) on extract or load failures to avoid hammering a degraded broker. Backoff resets immediately after a successful extract.
+The pipeline uses exponential backoff (200ms to 5s) on extract or load failures via [storm-data-shared](https://github.com/couchcryptid/storm-data-shared) `retry.NextBackoff()` and `retry.SleepWithContext()`. Backoff resets immediately after a successful extract.
 
 ### Graceful Shutdown
 

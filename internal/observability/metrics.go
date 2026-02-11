@@ -6,11 +6,10 @@ import (
 
 // Metrics holds the Prometheus counters, histograms, and gauges for the ETL pipeline.
 type Metrics struct {
-	MessagesConsumed   prometheus.Counter
-	MessagesProduced   prometheus.Counter
-	TransformErrors    prometheus.Counter
-	ProcessingDuration prometheus.Histogram
-	PipelineRunning    prometheus.Gauge
+	MessagesConsumed prometheus.Counter
+	MessagesProduced prometheus.Counter
+	TransformErrors  prometheus.Counter
+	PipelineRunning  prometheus.Gauge
 
 	// Batch processing metrics.
 	BatchSize               prometheus.Histogram
@@ -40,12 +39,6 @@ func NewMetrics() *Metrics {
 			Namespace: "storm_etl",
 			Name:      "transform_errors_total",
 			Help:      "Total transformation failures.",
-		}),
-		ProcessingDuration: prometheus.NewHistogram(prometheus.HistogramOpts{
-			Namespace: "storm_etl",
-			Name:      "processing_duration_seconds",
-			Help:      "Duration of a single extract-transform-load cycle.",
-			Buckets:   []float64{0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5},
 		}),
 		PipelineRunning: prometheus.NewGauge(prometheus.GaugeOpts{
 			Namespace: "storm_etl",
@@ -91,7 +84,6 @@ func NewMetrics() *Metrics {
 		m.MessagesConsumed,
 		m.MessagesProduced,
 		m.TransformErrors,
-		m.ProcessingDuration,
 		m.PipelineRunning,
 		m.BatchSize,
 		m.BatchProcessingDuration,
@@ -111,7 +103,6 @@ func NewMetricsForTesting() *Metrics {
 		MessagesConsumed:        prometheus.NewCounter(prometheus.CounterOpts{Namespace: "storm_etl", Name: "messages_consumed_total"}),
 		MessagesProduced:        prometheus.NewCounter(prometheus.CounterOpts{Namespace: "storm_etl", Name: "messages_produced_total"}),
 		TransformErrors:         prometheus.NewCounter(prometheus.CounterOpts{Namespace: "storm_etl", Name: "transform_errors_total"}),
-		ProcessingDuration:      prometheus.NewHistogram(prometheus.HistogramOpts{Namespace: "storm_etl", Name: "processing_duration_seconds"}),
 		PipelineRunning:         prometheus.NewGauge(prometheus.GaugeOpts{Namespace: "storm_etl", Name: "pipeline_running"}),
 		BatchSize:               prometheus.NewHistogram(prometheus.HistogramOpts{Namespace: "storm_etl", Name: "batch_size"}),
 		BatchProcessingDuration: prometheus.NewHistogram(prometheus.HistogramOpts{Namespace: "storm_etl", Name: "batch_processing_duration_seconds"}),

@@ -1,6 +1,6 @@
 # Storm Data ETL Service
 
-A Go service that consumes raw weather storm reports from a Kafka topic, enriches and normalizes the data, and produces transformed events to a downstream Kafka topic. Part of the storm data pipeline.
+A Go service that consumes raw weather storm reports from a Kafka topic, enriches and normalizes the data, and produces transformed events to a downstream Kafka topic. Part of the storm data pipeline. Uses the [storm-data-shared](https://github.com/couchcryptid/storm-data-shared) library for common config, observability, and retry utilities.
 
 ## How It Works
 
@@ -74,7 +74,6 @@ All configuration is via environment variables (loaded from `.env` in Docker Com
 | `storm_etl_messages_consumed_total`            | Counter   | `topic`             | Messages read from the source topic         |
 | `storm_etl_messages_produced_total`            | Counter   | `topic`             | Messages written to the sink topic          |
 | `storm_etl_transform_errors_total`             | Counter   | `error_type`        | Transformation failures (malformed input)   |
-| `storm_etl_processing_duration_seconds`        | Histogram | --                  | Duration of each extract-transform-load cycle |
 | `storm_etl_pipeline_running`                   | Gauge     | --                  | `1` when the pipeline loop is active        |
 | `storm_etl_batch_size`                         | Histogram | --                  | Number of messages per batch                |
 | `storm_etl_batch_processing_duration_seconds`  | Histogram | --                  | Duration of batch processing                |
@@ -108,11 +107,11 @@ internal/
     httpadapter/            Health, readiness, and metrics HTTP server
     kafka/                  Kafka reader (consumer) and writer (producer)
     mapbox/                 Mapbox geocoding client with LRU cache
-  config/                   Environment-based configuration
+  config/                   Environment-based configuration (uses storm-data-shared/config)
   domain/                   Domain types, transformation logic, and geocoding
   integration/              Integration tests (require Docker)
-  observability/            Structured logging and Prometheus metrics
-  pipeline/                 ETL orchestration (extract, transform, load)
+  observability/            Logging (via storm-data-shared) and Prometheus metrics
+  pipeline/                 ETL orchestration (extract, transform, load; uses storm-data-shared/retry)
 data/mock/                  Sample storm report JSON for testing
 ```
 

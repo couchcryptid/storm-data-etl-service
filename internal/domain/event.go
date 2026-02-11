@@ -99,10 +99,3 @@ type StormEvent struct {
 	RawPayload  []byte    `json:"-"`
 	ProcessedAt time.Time `json:"processed_at"`
 }
-
-// OutputEvent is the serialized form destined for the sink topic.
-type OutputEvent struct {
-	Key     []byte
-	Value   []byte
-	Headers map[string]string
-}

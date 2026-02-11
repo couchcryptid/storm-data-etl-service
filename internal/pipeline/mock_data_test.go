@@ -43,19 +43,14 @@ func TestStormTransformer_WithMockJSONData(t *testing.T) {
 			for _, row := range filtered {
 				raw := rawEventFromCSVRow(t, row, baseDate)
 
-				out, err := transformer.Transform(context.Background(), raw)
+				event, err := transformer.Transform(context.Background(), raw)
 				require.NoError(t, err)
-				assert.NotEmpty(t, out.Key)
-				assert.Equal(t, tc.eventType, out.Headers["event_type"])
-				assert.NotEmpty(t, out.Headers["processed_at"])
-
-				var roundtrip domain.StormEvent
-				require.NoError(t, json.Unmarshal(out.Value, &roundtrip))
-				assert.Equal(t, tc.eventType, roundtrip.EventType)
-				assert.Equal(t, tc.expectedUnit, roundtrip.Measurement.Unit)
-				assert.Equal(t, row["State"], roundtrip.Location.State)
-				assert.Equal(t, row["County"], roundtrip.Location.County)
-				assert.True(t, strings.HasPrefix(roundtrip.ID, tc.eventType+"-"))
+				assert.NotEmpty(t, event.ID)
+				assert.Equal(t, tc.eventType, event.EventType)
+				assert.Equal(t, tc.expectedUnit, event.Measurement.Unit)
+				assert.Equal(t, row["State"], event.Location.State)
+				assert.Equal(t, row["County"], event.Location.County)
+				assert.True(t, strings.HasPrefix(event.ID, tc.eventType+"-"))
 			}
 		})
 	}

@@ -130,34 +130,3 @@ func TestLoad_MapboxExplicitlyDisabled(t *testing.T) {
 	require.NoError(t, err)
 	assert.False(t, cfg.MapboxEnabled)
 }
-
-func TestParseBrokers(t *testing.T) {
-	tests := []struct {
-		name  string
-		input string
-		want  []string
-	}{
-		{"single broker", defaultBroker, []string{defaultBroker}},
-		{"multiple brokers", "a:1,b:2", []string{"a:1", "b:2"}},
-		{"trims whitespace", " a , , b ", []string{"a", "b"}},
-		{"empty string", "", []string{}},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := parseBrokers(tt.input)
-			assert.Equal(t, tt.want, got)
-		})
-	}
-}
-
-func TestEnvOrDefault(t *testing.T) {
-	t.Run("returns env value when set", func(t *testing.T) {
-		t.Setenv("TEST_CONFIG_KEY", "custom")
-		assert.Equal(t, "custom", envOrDefault("TEST_CONFIG_KEY", "default"))
-	})
-
-	t.Run("returns fallback when unset", func(t *testing.T) {
-		assert.Equal(t, "fallback", envOrDefault("NONEXISTENT_KEY_FOR_TEST", "fallback"))
-	})
-}

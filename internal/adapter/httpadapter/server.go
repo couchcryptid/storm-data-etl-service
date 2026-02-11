@@ -2,18 +2,13 @@ package httpadapter
 
 import (
 	"context"
-	"encoding/json"
 	"log/slog"
 	"net/http"
 	"time"
 
+	sharedobs "github.com/couchcryptid/storm-data-shared/observability"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
-
-// ReadinessChecker reports whether the service is ready to serve traffic.
-type ReadinessChecker interface {
-	CheckReadiness(ctx context.Context) error
-}
 
 // Server exposes health, readiness, and metrics HTTP endpoints.
 type Server struct {
@@ -22,7 +17,7 @@ type Server struct {
 }
 
 // NewServer creates an HTTP server with /healthz, /readyz, and /metrics routes.
-func NewServer(addr string, ready ReadinessChecker, logger *slog.Logger) *Server {
+func NewServer(addr string, ready sharedobs.ReadinessChecker, logger *slog.Logger) *Server {
 	mux := http.NewServeMux()
 
 	s := &Server{
@@ -36,8 +31,8 @@ func NewServer(addr string, ready ReadinessChecker, logger *slog.Logger) *Server
 		logger: logger,
 	}
 
-	mux.HandleFunc("GET /healthz", s.handleHealth)
-	mux.HandleFunc("GET /readyz", handleReady(ready))
+	mux.HandleFunc("GET /healthz", sharedobs.LivenessHandler())
+	mux.HandleFunc("GET /readyz", sharedobs.ReadinessHandler(ready))
 	mux.Handle("GET /metrics", promhttp.Handler())
 
 	return s
@@ -57,30 +52,4 @@ func (s *Server) Shutdown(ctx context.Context) error {
 // ServeHTTP delegates to the underlying handler, useful for testing.
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.httpServer.Handler.ServeHTTP(w, r)
-}
-
-func (s *Server) handleHealth(w http.ResponseWriter, _ *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]string{"status": "healthy"})
-}
-
-func handleReady(checker ReadinessChecker) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
-		defer cancel()
-
-		if err := checker.CheckReadiness(ctx); err != nil {
-			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"status": "not ready",
-				"error":  err.Error(),
-			})
-			return
-		}
-		writeJSON(w, http.StatusOK, map[string]string{"status": "ready"})
-	}
-}
-
-func writeJSON(w http.ResponseWriter, status int, v any) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(v) //nolint:errcheck // best-effort health response
 }

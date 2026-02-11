@@ -12,7 +12,6 @@ import (
 	"github.com/couchcryptid/storm-data-etl/internal/domain"
 	"github.com/couchcryptid/storm-data-etl/internal/observability"
 	"github.com/couchcryptid/storm-data-etl/internal/pipeline"
-	"github.com/google/go-cmp/cmp"
 	"github.com/jonboulle/clockwork"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -39,18 +38,22 @@ type mockTransformer struct {
 	err error
 }
 
-func (m *mockTransformer) Transform(_ context.Context, raw domain.RawEvent) (domain.OutputEvent, error) {
+func (m *mockTransformer) Transform(_ context.Context, raw domain.RawEvent) (domain.StormEvent, error) {
 	if m.err != nil {
-		return domain.OutputEvent{}, m.err
+		return domain.StormEvent{}, m.err
 	}
-	return domain.OutputEvent{Key: raw.Key, Value: raw.Value}, nil
+	var event domain.StormEvent
+	if err := json.Unmarshal(raw.Value, &event); err != nil {
+		return domain.StormEvent{}, err
+	}
+	return event, nil
 }
 
 type mockBatchLoader struct {
-	batches [][]domain.OutputEvent
+	batches [][]domain.StormEvent
 }
 
-func (m *mockBatchLoader) LoadBatch(_ context.Context, events []domain.OutputEvent) error {
+func (m *mockBatchLoader) LoadBatch(_ context.Context, events []domain.StormEvent) error {
 	m.batches = append(m.batches, events)
 	return nil
 }
@@ -81,7 +84,7 @@ func TestPipeline_Run_HappyPath(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, loader.batches, 1)
 	assert.Len(t, loader.batches[0], 1)
-	assert.Equal(t, raw.Value, loader.batches[0][0].Value)
+	assert.Equal(t, "evt-1", loader.batches[0][0].ID)
 	assert.NoError(t, p.CheckReadiness(context.Background()))
 }
 
@@ -221,12 +224,16 @@ type partialFailTransformer struct {
 	failOn int
 }
 
-func (m *partialFailTransformer) Transform(_ context.Context, raw domain.RawEvent) (domain.OutputEvent, error) {
+func (m *partialFailTransformer) Transform(_ context.Context, raw domain.RawEvent) (domain.StormEvent, error) {
 	n := int(m.count.Add(1))
 	if n == m.failOn {
-		return domain.OutputEvent{}, errors.New("transform failure")
+		return domain.StormEvent{}, errors.New("transform failure")
 	}
-	return domain.OutputEvent{Key: raw.Key, Value: raw.Value}, nil
+	var event domain.StormEvent
+	if err := json.Unmarshal(raw.Value, &event); err != nil {
+		return domain.StormEvent{}, err
+	}
+	return event, nil
 }
 
 type retryBatchExtractor struct {
@@ -247,10 +254,10 @@ func (m *retryBatchExtractor) ExtractBatch(ctx context.Context, _ int) ([]domain
 type failingBatchLoader struct {
 	callCount atomic.Int64
 	failUntil int
-	batches   [][]domain.OutputEvent
+	batches   [][]domain.StormEvent
 }
 
-func (m *failingBatchLoader) LoadBatch(_ context.Context, events []domain.OutputEvent) error {
+func (m *failingBatchLoader) LoadBatch(_ context.Context, events []domain.StormEvent) error {
 	n := int(m.callCount.Add(1))
 	if n <= m.failUntil {
 		return errors.New("load failed")
@@ -307,10 +314,10 @@ func TestStormTransformer_Transform(t *testing.T) {
 	raw := makeRawCSVEvent(t, "tornado", "EF3")
 
 	transformer := pipeline.NewTransformer(nil, slog.Default())
-	out, err := transformer.Transform(context.Background(), raw)
+	event, err := transformer.Transform(context.Background(), raw)
 	require.NoError(t, err)
-	assert.NotEmpty(t, out.Key)
-	assert.Contains(t, string(out.Value), `"event_type":"tornado"`)
+	assert.NotEmpty(t, event.ID)
+	assert.Equal(t, "tornado", event.EventType)
 }
 
 func TestDomain_ParseRawEvent(t *testing.T) {
@@ -371,36 +378,6 @@ func TestDomain_EnrichStormEvent_NormalizesFields(t *testing.T) {
 		EventType: "snow",
 	})
 	assert.Empty(t, unknown.EventType)
-}
-
-func TestDomain_SerializeStormEvent(t *testing.T) {
-	event := domain.StormEvent{
-		ID:          "evt-1",
-		EventType:   "hail",
-		Geo:         domain.Geo{Lat: 35.0, Lon: -97.0},
-		ProcessedAt: time.Now(),
-	}
-
-	out, err := domain.SerializeStormEvent(event)
-	require.NoError(t, err)
-	assert.Equal(t, []byte("evt-1"), out.Key)
-	assert.Equal(t, "hail", out.Headers["event_type"])
-
-	var roundtrip domain.StormEvent
-	require.NoError(t, json.Unmarshal(out.Value, &roundtrip))
-
-	type eventSummary struct {
-		ID        string
-		EventType string
-		Lat       float64
-		Lon       float64
-	}
-
-	expected := eventSummary{ID: event.ID, EventType: event.EventType, Lat: event.Geo.Lat, Lon: event.Geo.Lon}
-	actual := eventSummary{ID: roundtrip.ID, EventType: roundtrip.EventType, Lat: roundtrip.Geo.Lat, Lon: roundtrip.Geo.Lon}
-	if diff := cmp.Diff(expected, actual); diff != "" {
-		t.Fatalf("roundtrip mismatch (-want +got):\n%s", diff)
-	}
 }
 
 // --- helpers ---

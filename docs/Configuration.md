@@ -34,6 +34,20 @@ Geocoding is an optional enrichment step. Setting `MAPBOX_TOKEN` automatically e
 - Set `MAPBOX_ENABLED=false` to disable geocoding even when a token is present
 - Setting `MAPBOX_ENABLED=true` without a token returns a startup error
 
+## Shared Parsers
+
+Several environment variables use parsers from the [storm-data-shared](https://github.com/couchcryptid/storm-data-shared/wiki/Configuration) library:
+
+| Variable | Shared Parser |
+|----------|--------------|
+| `KAFKA_BROKERS` | `config.ParseBrokers()` |
+| `BATCH_SIZE` | `config.ParseBatchSize()` |
+| `BATCH_FLUSH_INTERVAL` | `config.ParseBatchFlushInterval()` |
+| `SHUTDOWN_TIMEOUT` | `config.ParseShutdownTimeout()` |
+| `LOG_LEVEL`, `LOG_FORMAT` | `observability.NewLogger()` |
+
+ETL-specific variables (`KAFKA_SOURCE_TOPIC`, `KAFKA_SINK_TOPIC`, `MAPBOX_*`) are parsed in `internal/config/config.go`.
+
 ## Validation
 
 Configuration is loaded and validated in `internal/config/config.go`. The `Load()` function returns `(*Config, error)` and fails fast on:

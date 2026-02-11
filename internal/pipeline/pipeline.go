@@ -9,6 +9,7 @@ import (
 
 	"github.com/couchcryptid/storm-data-etl/internal/domain"
 	"github.com/couchcryptid/storm-data-etl/internal/observability"
+	"github.com/couchcryptid/storm-data-shared/retry"
 )
 
 // BatchExtractor reads up to batchSize raw events from the source.
@@ -16,14 +17,14 @@ type BatchExtractor interface {
 	ExtractBatch(ctx context.Context, batchSize int) ([]domain.RawEvent, error)
 }
 
-// Transformer converts a raw event into an output event.
+// Transformer converts a raw event into a domain storm event.
 type Transformer interface {
-	Transform(ctx context.Context, raw domain.RawEvent) (domain.OutputEvent, error)
+	Transform(ctx context.Context, raw domain.RawEvent) (domain.StormEvent, error)
 }
 
-// BatchLoader writes multiple output events to the destination.
+// BatchLoader writes multiple storm events to the destination.
 type BatchLoader interface {
-	LoadBatch(ctx context.Context, events []domain.OutputEvent) error
+	LoadBatch(ctx context.Context, events []domain.StormEvent) error
 }
 
 // Pipeline orchestrates the extract-transform-load loop.
@@ -120,7 +121,7 @@ func (p *Pipeline) processBatch(ctx context.Context, backoff *time.Duration, max
 // and commits offsets. Returns the number of successfully loaded messages and
 // false if the pipeline should stop.
 func (p *Pipeline) transformAndLoad(ctx context.Context, rawBatch []domain.RawEvent, backoff *time.Duration, maxBackoff time.Duration) (int, bool) {
-	outBatch := make([]domain.OutputEvent, 0, len(rawBatch))
+	outBatch := make([]domain.StormEvent, 0, len(rawBatch))
 	successfulRaws := make([]domain.RawEvent, 0, len(rawBatch))
 
 	for _, raw := range rawBatch {
@@ -164,10 +165,10 @@ func (p *Pipeline) backoffOrStop(ctx context.Context, backoff *time.Duration, ma
 	if ctx.Err() != nil {
 		return false
 	}
-	if !sleepWithContext(ctx, *backoff) {
+	if !retry.SleepWithContext(ctx, *backoff) {
 		return false
 	}
-	*backoff = nextBackoff(*backoff, maxBackoff)
+	*backoff = retry.NextBackoff(*backoff, maxBackoff)
 	return true
 }
 
@@ -179,29 +180,5 @@ func (p *Pipeline) commitOffset(ctx context.Context, raw domain.RawEvent) {
 	if err := raw.Commit(ctx); err != nil {
 		p.logger.Warn("commit offset failed", "error", err,
 			"topic", raw.Topic, "partition", raw.Partition, "offset", raw.Offset)
-	}
-}
-
-func nextBackoff(current, maxBackoff time.Duration) time.Duration {
-	next := current * 2
-	if next > maxBackoff {
-		return maxBackoff
-	}
-	return next
-}
-
-func sleepWithContext(ctx context.Context, d time.Duration) bool {
-	if d <= 0 {
-		return true
-	}
-
-	timer := time.NewTimer(d)
-	defer timer.Stop()
-
-	select {
-	case <-ctx.Done():
-		return false
-	case <-timer.C:
-		return true
 	}
 }

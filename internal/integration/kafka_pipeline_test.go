@@ -120,16 +120,16 @@ func TestKafkaReaderWriter(t *testing.T) {
 	// Commit the offset.
 	require.NoError(t, raw.Commit(ctx))
 
-	// Transform the raw event into an output event.
+	// Transform the raw event into a storm event.
 	transformer := pipeline.NewTransformer(nil, discardLogger())
-	out, err := transformer.Transform(ctx, raw)
+	event, err := transformer.Transform(ctx, raw)
 	require.NoError(t, err)
 
 	// Load via kafka.Writer.
 	writer := kafka.NewWriter(cfg, discardLogger())
 	t.Cleanup(func() { _ = writer.Close() })
 
-	require.NoError(t, writer.LoadBatch(ctx, []domain.OutputEvent{out}))
+	require.NoError(t, writer.LoadBatch(ctx, []domain.StormEvent{event}))
 
 	// Read from the sink topic and verify headers + value.
 	consumer := kafkago.NewReader(kafkago.ReaderConfig{

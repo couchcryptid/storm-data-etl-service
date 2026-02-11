@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"encoding/json"
 	"strings"
 	"testing"
 	"time"
@@ -470,82 +469,6 @@ func TestDeriveTimeBucket(t *testing.T) {
 			assert.Equal(t, tt.expected, result)
 		})
 	}
-}
-
-func TestSerializeStormEvent(t *testing.T) {
-	fixedTime := time.Date(2024, 4, 26, 12, 0, 0, 0, time.UTC)
-
-	t.Run("successful serialization", func(t *testing.T) {
-		event := StormEvent{
-			ID:          testEventID,
-			EventType:   "hail",
-			Measurement: Measurement{Magnitude: 1.5, Unit: "in", Severity: stringPtr("moderate")},
-			ProcessedAt: fixedTime,
-		}
-
-		result, err := SerializeStormEvent(event)
-
-		require.NoError(t, err)
-		assert.Equal(t, []byte(testEventID), result.Key)
-
-		var unmarshaled StormEvent
-		err = json.Unmarshal(result.Value, &unmarshaled)
-		require.NoError(t, err)
-		assert.Equal(t, testEventID, unmarshaled.ID)
-		assert.Equal(t, "hail", unmarshaled.EventType)
-		assert.InDelta(t, 1.5, unmarshaled.Measurement.Magnitude, 0.0001)
-
-		assert.Equal(t, "hail", result.Headers["event_type"])
-		assert.Equal(t, "2024-04-26T12:00:00Z", result.Headers["processed_at"])
-	})
-
-	t.Run("empty event ID", func(t *testing.T) {
-		event := StormEvent{
-			EventType:   "wind",
-			ProcessedAt: fixedTime,
-		}
-
-		result, err := SerializeStormEvent(event)
-
-		require.NoError(t, err)
-		assert.Empty(t, result.Key)
-		assert.Equal(t, "wind", result.Headers["event_type"])
-	})
-
-	t.Run("complex nested structures", func(t *testing.T) {
-		event := StormEvent{
-			ID:        "evt-456",
-			EventType: "tornado",
-			Geo: Geo{
-				Lat: 30.2672,
-				Lon: -97.7431,
-			},
-			Location: Location{
-				Raw:       testLocationNW,
-				Name:      "AUSTIN",
-				Distance:  float64Ptr(5.2),
-				Direction: stringPtr("NW"),
-				State:     "TX",
-				County:    "TRAVIS",
-			},
-			EventTime:    time.Date(2024, 4, 26, 15, 0, 0, 0, time.UTC),
-			Comments:     "Tornado confirmed (AUS)",
-			SourceOffice: "AUS",
-			ProcessedAt:  fixedTime,
-		}
-
-		result, err := SerializeStormEvent(event)
-
-		require.NoError(t, err)
-
-		var unmarshaled StormEvent
-		err = json.Unmarshal(result.Value, &unmarshaled)
-		require.NoError(t, err)
-		assert.InDelta(t, 30.2672, unmarshaled.Geo.Lat, 0.0001)
-		assert.InDelta(t, -97.7431, unmarshaled.Geo.Lon, 0.0001)
-		assert.Equal(t, "AUSTIN", unmarshaled.Location.Name)
-		assert.Equal(t, "AUS", unmarshaled.SourceOffice)
-	})
 }
 
 func TestSetClock(t *testing.T) {

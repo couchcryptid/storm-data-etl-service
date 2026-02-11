@@ -2,7 +2,10 @@ package kafka
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/couchcryptid/storm-data-etl/internal/config"
 	"github.com/couchcryptid/storm-data-etl/internal/domain"
@@ -27,15 +30,19 @@ func NewWriter(cfg *config.Config, logger *slog.Logger) *Writer {
 	return &Writer{writer: w, logger: logger}
 }
 
-// LoadBatch publishes multiple transformed events to the sink Kafka topic
-// in a single WriteMessages call for efficiency.
-func (w *Writer) LoadBatch(ctx context.Context, events []domain.OutputEvent) error {
+// LoadBatch serializes and publishes multiple storm events to the sink Kafka
+// topic in a single WriteMessages call for efficiency.
+func (w *Writer) LoadBatch(ctx context.Context, events []domain.StormEvent) error {
 	if len(events) == 0 {
 		return nil
 	}
 	msgs := make([]kafkago.Message, len(events))
-	for i, event := range events {
-		msgs[i] = mapOutputEventToMessage(event)
+	for i := range events {
+		msg, err := serializeToMessage(events[i])
+		if err != nil {
+			return err
+		}
+		msgs[i] = msg
 	}
 	return w.writer.WriteMessages(ctx, msgs...)
 }
@@ -44,14 +51,18 @@ func (w *Writer) Close() error {
 	return w.writer.Close()
 }
 
-func mapOutputEventToMessage(event domain.OutputEvent) kafkago.Message {
-	headers := make([]kafkago.Header, 0, len(event.Headers))
-	for k, v := range event.Headers {
-		headers = append(headers, kafkago.Header{Key: k, Value: []byte(v)})
+// serializeToMessage marshals a StormEvent into a Kafka message.
+func serializeToMessage(event domain.StormEvent) (kafkago.Message, error) {
+	data, err := json.Marshal(event)
+	if err != nil {
+		return kafkago.Message{}, fmt.Errorf("serialize storm event: %w", err)
 	}
 	return kafkago.Message{
-		Key:     event.Key,
-		Value:   event.Value,
-		Headers: headers,
-	}
+		Key:   []byte(event.ID),
+		Value: data,
+		Headers: []kafkago.Header{
+			{Key: "event_type", Value: []byte(event.EventType)},
+			{Key: "processed_at", Value: []byte(event.ProcessedAt.Format(time.RFC3339))},
+		},
+	}, nil
 }
