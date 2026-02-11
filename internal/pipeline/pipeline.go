@@ -64,6 +64,8 @@ func (p *Pipeline) Run(ctx context.Context) error {
 	p.metrics.PipelineRunning.Set(1)
 	defer p.metrics.PipelineRunning.Set(0)
 
+	// Exponential backoff: start at 200ms, double each retry, cap at 5s.
+	// Keeps retry storms short while avoiding tight loops during Kafka outages.
 	backoff := 200 * time.Millisecond
 	maxBackoff := 5 * time.Second
 
