@@ -141,7 +141,7 @@ func TestKafkaReaderWriter(t *testing.T) {
 	t.Cleanup(func() { _ = consumer.Close() })
 
 	tm := readTransformed(ctx, t, consumer)
-	assert.Equal(t, "hail", tm.Headers["type"])
+	assert.Equal(t, "hail", tm.Headers["event_type"])
 	assert.Contains(t, tm.Headers, "processed_at")
 	_, err = time.Parse(time.RFC3339, tm.Headers["processed_at"])
 	assert.NoError(t, err, "processed_at should be valid RFC3339")
@@ -236,7 +236,7 @@ func TestPipelineEndToEnd(t *testing.T) {
 		typeCounts[tm.Event.EventType]++
 
 		// Every message must have type and processed_at headers.
-		assert.NotEmpty(t, tm.Headers["type"], "missing type header")
+		assert.NotEmpty(t, tm.Headers["event_type"], "missing event_type header")
 		assert.Contains(t, tm.Headers, "processed_at", "missing processed_at header")
 		_, err := time.Parse(time.RFC3339, tm.Headers["processed_at"])
 		assert.NoError(t, err, "invalid processed_at format")

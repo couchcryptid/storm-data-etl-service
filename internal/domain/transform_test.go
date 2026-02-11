@@ -27,7 +27,7 @@ func TestParseRawEvent(t *testing.T) {
 	baseDate := time.Date(2024, 4, 26, 0, 0, 0, 0, time.UTC)
 
 	t.Run("hail CSV record", func(t *testing.T) {
-		data := []byte(`{"Time":"1510","Size":"125","Location":"8 ESE Chappel","County":"San Saba","State":"TX","Lat":"31.02","Lon":"-98.44","Comments":"1.25 inch hail reported. (SJT)","Type":"hail"}`)
+		data := []byte(`{"Time":"1510","Size":"125","Location":"8 ESE Chappel","County":"San Saba","State":"TX","Lat":"31.02","Lon":"-98.44","Comments":"1.25 inch hail reported. (SJT)","EventType":"hail"}`)
 		raw := RawEvent{Value: data, Timestamp: baseDate}
 		result, err := ParseRawEvent(raw)
 
@@ -48,7 +48,7 @@ func TestParseRawEvent(t *testing.T) {
 	})
 
 	t.Run("tornado CSV record", func(t *testing.T) {
-		data := []byte(`{"Time":"1223","F_Scale":"EF2","Location":"2 N Mcalester","County":"Pittsburg","State":"OK","Lat":"34.96","Lon":"-95.77","Comments":"Tornado confirmed (TSA)","Type":"tornado"}`)
+		data := []byte(`{"Time":"1223","F_Scale":"EF2","Location":"2 N Mcalester","County":"Pittsburg","State":"OK","Lat":"34.96","Lon":"-95.77","Comments":"Tornado confirmed (TSA)","EventType":"tornado"}`)
 		raw := RawEvent{Value: data, Timestamp: baseDate}
 		result, err := ParseRawEvent(raw)
 
@@ -60,7 +60,7 @@ func TestParseRawEvent(t *testing.T) {
 	})
 
 	t.Run("wind CSV record", func(t *testing.T) {
-		data := []byte(`{"Time":"1251","Speed":"65","Location":"4 N Dow","County":"Pittsburg","State":"OK","Lat":"34.94","Lon":"-95.59","Comments":"(TSA)","Type":"wind"}`)
+		data := []byte(`{"Time":"1251","Speed":"65","Location":"4 N Dow","County":"Pittsburg","State":"OK","Lat":"34.94","Lon":"-95.59","Comments":"(TSA)","EventType":"wind"}`)
 		raw := RawEvent{Value: data, Timestamp: baseDate}
 		result, err := ParseRawEvent(raw)
 
@@ -71,7 +71,7 @@ func TestParseRawEvent(t *testing.T) {
 	})
 
 	t.Run("UNK magnitude", func(t *testing.T) {
-		data := []byte(`{"Time":"1245","Speed":"UNK","Location":"Mcalester","County":"Pittsburg","State":"OK","Lat":"34.94","Lon":"-95.77","Comments":"","Type":"wind"}`)
+		data := []byte(`{"Time":"1245","Speed":"UNK","Location":"Mcalester","County":"Pittsburg","State":"OK","Lat":"34.94","Lon":"-95.77","Comments":"","EventType":"wind"}`)
 		raw := RawEvent{Value: data, Timestamp: baseDate}
 		result, err := ParseRawEvent(raw)
 
@@ -97,7 +97,7 @@ func TestParseRawEvent(t *testing.T) {
 	})
 
 	t.Run("deterministic ID", func(t *testing.T) {
-		data := []byte(`{"Time":"1510","Size":"125","Location":"8 ESE Chappel","County":"San Saba","State":"TX","Lat":"31.02","Lon":"-98.44","Comments":"","Type":"hail"}`)
+		data := []byte(`{"Time":"1510","Size":"125","Location":"8 ESE Chappel","County":"San Saba","State":"TX","Lat":"31.02","Lon":"-98.44","Comments":"","EventType":"hail"}`)
 		raw := RawEvent{Value: data, Timestamp: baseDate}
 
 		result1, err := ParseRawEvent(raw)
@@ -496,7 +496,7 @@ func TestSerializeStormEvent(t *testing.T) {
 		assert.Equal(t, "hail", unmarshaled.EventType)
 		assert.InDelta(t, 1.5, unmarshaled.Measurement.Magnitude, 0.0001)
 
-		assert.Equal(t, "hail", result.Headers["type"])
+		assert.Equal(t, "hail", result.Headers["event_type"])
 		assert.Equal(t, "2024-04-26T12:00:00Z", result.Headers["processed_at"])
 	})
 
@@ -510,7 +510,7 @@ func TestSerializeStormEvent(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.Empty(t, result.Key)
-		assert.Equal(t, "wind", result.Headers["type"])
+		assert.Equal(t, "wind", result.Headers["event_type"])
 	})
 
 	t.Run("complex nested structures", func(t *testing.T) {

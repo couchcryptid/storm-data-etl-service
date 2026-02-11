@@ -310,7 +310,7 @@ func TestStormTransformer_Transform(t *testing.T) {
 	out, err := transformer.Transform(context.Background(), raw)
 	require.NoError(t, err)
 	assert.NotEmpty(t, out.Key)
-	assert.Contains(t, string(out.Value), `"type":"tornado"`)
+	assert.Contains(t, string(out.Value), `"event_type":"tornado"`)
 }
 
 func TestDomain_ParseRawEvent(t *testing.T) {
@@ -384,7 +384,7 @@ func TestDomain_SerializeStormEvent(t *testing.T) {
 	out, err := domain.SerializeStormEvent(event)
 	require.NoError(t, err)
 	assert.Equal(t, []byte("evt-1"), out.Key)
-	assert.Equal(t, "hail", out.Headers["type"])
+	assert.Equal(t, "hail", out.Headers["event_type"])
 
 	var roundtrip domain.StormEvent
 	require.NoError(t, json.Unmarshal(out.Value, &roundtrip))
@@ -408,14 +408,14 @@ func TestDomain_SerializeStormEvent(t *testing.T) {
 func makeRawCSVEvent(t *testing.T, eventType, magnitude string) domain.RawEvent {
 	t.Helper()
 	row := map[string]string{
-		"Time":     "1510",
-		"Location": "8 ESE Chappel",
-		"County":   "San Saba",
-		"State":    "TX",
-		"Lat":      "31.02",
-		"Lon":      "-98.44",
-		"Comments": "Test report. (SJT)",
-		"Type":     eventType,
+		"Time":      "1510",
+		"Location":  "8 ESE Chappel",
+		"County":    "San Saba",
+		"State":     "TX",
+		"Lat":       "31.02",
+		"Lon":       "-98.44",
+		"Comments":  "Test report. (SJT)",
+		"EventType": eventType,
 	}
 	switch eventType {
 	case "hail":

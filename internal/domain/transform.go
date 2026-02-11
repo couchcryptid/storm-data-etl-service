@@ -31,12 +31,12 @@ func ParseRawEvent(raw RawEvent) (StormEvent, error) {
 
 	lat := parseFloatOrZero(rec.Lat)
 	lon := parseFloatOrZero(rec.Lon)
-	magnitude := parseMagnitudeField(rec.Type, rec.Size, rec.FScale, rec.Speed)
+	magnitude := parseMagnitudeField(rec.EventType, rec.Size, rec.FScale, rec.Speed)
 	beginTime := parseHHMM(raw.Timestamp, rec.Time)
 
 	return StormEvent{
-		ID:          generateID(rec.Type, rec.State, lat, lon, rec.Time, magnitude),
-		EventType:   rec.Type,
+		ID:          generateID(rec.EventType, rec.State, lat, lon, rec.Time, magnitude),
+		EventType:   rec.EventType,
 		Geo:         Geo{Lat: lat, Lon: lon},
 		Measurement: Measurement{Magnitude: magnitude},
 		BeginTime:   beginTime,
@@ -308,7 +308,7 @@ func SerializeStormEvent(event StormEvent) (OutputEvent, error) {
 		Key:   []byte(event.ID),
 		Value: data,
 		Headers: map[string]string{
-			"type":         event.EventType,
+			"event_type":   event.EventType,
 			"processed_at": event.ProcessedAt.Format(time.RFC3339),
 		},
 	}, nil

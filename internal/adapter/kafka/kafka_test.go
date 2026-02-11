@@ -39,7 +39,7 @@ func TestMapOutputEventToMessage(t *testing.T) {
 		Key:   []byte("key-1"),
 		Value: []byte(`{"id":"evt-1"}`),
 		Headers: map[string]string{
-			"type": "hail",
+			"event_type": "hail",
 		},
 	}
 
@@ -48,6 +48,6 @@ func TestMapOutputEventToMessage(t *testing.T) {
 	assert.Equal(t, []byte("key-1"), msg.Key)
 	assert.JSONEq(t, `{"id":"evt-1"}`, string(msg.Value))
 	assert.Len(t, msg.Headers, 1)
-	assert.Equal(t, "type", msg.Headers[0].Key)
+	assert.Equal(t, "event_type", msg.Headers[0].Key)
 	assert.Equal(t, []byte("hail"), msg.Headers[0].Value)
 }

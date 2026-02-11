@@ -10,7 +10,7 @@
     "Lat": "31.02",
     "Lon": "-98.44",
     "Comments": "1.25 inch hail reported at Colorado Bend State Park. (SJT)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1703",
@@ -23,7 +23,7 @@
     "Lat": "32.5",
     "Lon": "-97.29",
     "Comments": "Quarter hail reported. (FWD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1704",
@@ -36,7 +36,7 @@
     "Lat": "42.39",
     "Lon": "-95.87",
     "Comments": "Report via social media. (FSD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1709",
@@ -49,7 +49,7 @@
     "Lat": "32.63",
     "Lon": "-97.21",
     "Comments": "Report from mPING: Quarter (1.00 in.). (FWD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1710",
@@ -62,7 +62,7 @@
     "Lat": "32.77",
     "Lon": "-97.31",
     "Comments": "Golf ball hail reported at Little Rd and I20 in SE Fort Worth. (FWD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1710",
@@ -75,7 +75,7 @@
     "Lat": "41.02",
     "Lon": "-98.91",
     "Comments": "Also reports of dime to half-dollar size hail in Ravenna. (GID)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1711",
@@ -88,7 +88,7 @@
     "Lat": "32.69",
     "Lon": "-97.13",
     "Comments": "Quarter hail reported in Arlington. (FWD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1719",
@@ -101,7 +101,7 @@
     "Lat": "32.71",
     "Lon": "-97.11",
     "Comments": "Report from mPING: Golf Ball (1.75 in.). (FWD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1725",
@@ -114,7 +114,7 @@
     "Lat": "41.06",
     "Lon": "-98.91",
     "Comments": "Started to cover the ground with quarter to half-dollar size hail. (GID)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1730",
@@ -127,7 +127,7 @@
     "Lat": "42.63",
     "Lon": "-95.75",
     "Comments": "Quarter to Half Dollar sized hail reported by the Cherokee County EM. Time matched up to Radar. (FSD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1747",
@@ -140,7 +140,7 @@
     "Lat": "42.81",
     "Lon": "-95.71",
     "Comments": "Report and photo via social media. (FSD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1754",
@@ -153,7 +153,7 @@
     "Lat": "33.18",
     "Lon": "-95.23",
     "Comments": "Corrects previous hail report from 1 NW Mount Vernon. (SHV)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1755",
@@ -166,7 +166,7 @@
     "Lat": "42.91",
     "Lon": "-95.73",
     "Comments": "Quarter sized hail and heavy rain. (FSD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1830",
@@ -179,7 +179,7 @@
     "Lat": "40.31",
     "Lon": "-97.18",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1915",
@@ -192,7 +192,7 @@
     "Lat": "41.54",
     "Lon": "-98.26",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1924",
@@ -205,7 +205,7 @@
     "Lat": "40.74",
     "Lon": "-96.85",
     "Comments": "Report of hail ranging from half an inch to an inch in Denton... NE. (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1927",
@@ -218,7 +218,7 @@
     "Lat": "40.73",
     "Lon": "-96.84",
     "Comments": "ground covered with hail. (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1935",
@@ -231,7 +231,7 @@
     "Lat": "41.08",
     "Lon": "-97.2",
     "Comments": "Butler County Emergency Manager reported golf ball sized hail in downtown Ulysses. (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1941",
@@ -244,7 +244,7 @@
     "Lat": "40.86",
     "Lon": "-96.74",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1948",
@@ -257,7 +257,7 @@
     "Lat": "40.87",
     "Lon": "-96.73",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1948",
@@ -270,7 +270,7 @@
     "Lat": "40.87",
     "Lon": "-96.74",
     "Comments": "Report from mPING: Golf Ball (1.75 in.). (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1949",
@@ -283,7 +283,7 @@
     "Lat": "40.85",
     "Lon": "-96.79",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1951",
@@ -296,7 +296,7 @@
     "Lat": "37.5",
     "Lon": "-96.26",
     "Comments": "(ICT)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1954",
@@ -309,7 +309,7 @@
     "Lat": "40.99",
     "Lon": "-96.6",
     "Comments": "delayed report time estimated by radar. (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2001",
@@ -322,7 +322,7 @@
     "Lat": "37.64",
     "Lon": "-96.25",
     "Comments": "(ICT)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2002",
@@ -335,7 +335,7 @@
     "Lat": "41.05",
     "Lon": "-96.59",
     "Comments": "Corrects previous hail report from 3 ESE Ceresco. Corrects previous hail report from 3 ESE Ceresco for wrong date. Delayed report from 4/26. (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2003",
@@ -348,7 +348,7 @@
     "Lat": "37.36",
     "Lon": "-96.38",
     "Comments": "(ICT)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2005",
@@ -361,7 +361,7 @@
     "Lat": "41.5",
     "Lon": "-97.73",
     "Comments": "Report on Facebook of Quarter sized hail north of Genoa. (GID)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2012",
@@ -374,7 +374,7 @@
     "Lat": "37.64",
     "Lon": "-96.07",
     "Comments": "(ICT)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2031",
@@ -387,7 +387,7 @@
     "Lat": "44.07",
     "Lon": "-97.29",
     "Comments": "Mostly pea to dime sized hail... but a few as big as a quarter. No damage to anything... since crops are not up yet. (FSD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2033",
@@ -400,7 +400,7 @@
     "Lat": "41.32",
     "Lon": "-96.37",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2041",
@@ -413,7 +413,7 @@
     "Lat": "37.57",
     "Lon": "-95.96",
     "Comments": "May have had a wall cloud initially. (ICT)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2100",
@@ -426,7 +426,7 @@
     "Lat": "37.57",
     "Lon": "-95.95",
     "Comments": "(ICT)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2108",
@@ -439,7 +439,7 @@
     "Lat": "41.55",
     "Lon": "-96.14",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2110",
@@ -452,7 +452,7 @@
     "Lat": "39.84",
     "Lon": "-96.18",
     "Comments": "(TOP)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2111",
@@ -465,7 +465,7 @@
     "Lat": "39.84",
     "Lon": "-96.13",
     "Comments": "Emergency Manager reported golf ball size hail. (TOP)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2112",
@@ -478,7 +478,7 @@
     "Lat": "36.14",
     "Lon": "-96.3",
     "Comments": "pic from news media... time estimated via radar. (TSA)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2112",
@@ -491,7 +491,7 @@
     "Lat": "41.55",
     "Lon": "-96.14",
     "Comments": "Report from mPING: Golf Ball (1.75 in.). (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2125",
@@ -504,7 +504,7 @@
     "Lat": "41.32",
     "Lon": "-96.37",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2126",
@@ -517,7 +517,7 @@
     "Lat": "41.4",
     "Lon": "-96.3",
     "Comments": "Report from mPING: Quarter (1.00 in.). (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2128",
@@ -530,7 +530,7 @@
     "Lat": "36.36",
     "Lon": "-96",
     "Comments": "pic larger than quarter shown on air...time estimated from radar. (TSA)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2130",
@@ -543,7 +543,7 @@
     "Lat": "36.37",
     "Lon": "-95.99",
     "Comments": "Hail slightly larger than a quarter shown on air. (TSA)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2130",
@@ -556,7 +556,7 @@
     "Lat": "41.18",
     "Lon": "-96.07",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2132",
@@ -569,7 +569,7 @@
     "Lat": "36.41",
     "Lon": "-95.93",
     "Comments": "Report from mPING: Quarter (1.00 in.). (TSA)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2140",
@@ -582,7 +582,7 @@
     "Lat": "41.13",
     "Lon": "-96.06",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2140",
@@ -595,7 +595,7 @@
     "Lat": "41.21",
     "Lon": "-96.05",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2142",
@@ -608,7 +608,7 @@
     "Lat": "41.09",
     "Lon": "-96.07",
     "Comments": "Report from mPING: Golf Ball (1.75 in.). (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2143",
@@ -621,7 +621,7 @@
     "Lat": "41.15",
     "Lon": "-96.08",
     "Comments": "Report from mPING: Golf Ball (1.75 in.). (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2145",
@@ -634,7 +634,7 @@
     "Lat": "41.15",
     "Lon": "-96.04",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2146",
@@ -647,7 +647,7 @@
     "Lat": "41.55",
     "Lon": "-96.19",
     "Comments": "Report from mPING: Quarter (1.00 in.). (OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2147",
@@ -660,7 +660,7 @@
     "Lat": "41.14",
     "Lon": "-96.06",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2151",
@@ -673,7 +673,7 @@
     "Lat": "31.1",
     "Lon": "-98.51",
     "Comments": "Quarter size hail in Bend. Time estimated by radar. (SJT)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2155",
@@ -686,7 +686,7 @@
     "Lat": "32.56",
     "Lon": "-95.87",
     "Comments": "Quarter sized hail near SH 64 at FM 859. (FWD)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2155",
@@ -699,7 +699,7 @@
     "Lat": "41.28",
     "Lon": "-96",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2155",
@@ -712,7 +712,7 @@
     "Lat": "41.29",
     "Lon": "-95.91",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2155",
@@ -725,7 +725,7 @@
     "Lat": "41.3",
     "Lon": "-95.93",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2155",
@@ -738,7 +738,7 @@
     "Lat": "41.3",
     "Lon": "-95.94",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2156",
@@ -751,7 +751,7 @@
     "Lat": "41.16",
     "Lon": "-96.02",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2202",
@@ -764,7 +764,7 @@
     "Lat": "40.34",
     "Lon": "-95.67",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2217",
@@ -777,7 +777,7 @@
     "Lat": "37.85",
     "Lon": "-95.15",
     "Comments": "(ICT)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2220",
@@ -790,7 +790,7 @@
     "Lat": "36.46",
     "Lon": "-95.62",
     "Comments": "pic from social media... time estimated from radar. (TSA)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2230",
@@ -803,7 +803,7 @@
     "Lat": "37.9",
     "Lon": "-94.98",
     "Comments": "(SGF)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2230",
@@ -816,7 +816,7 @@
     "Lat": "40.29",
     "Lon": "-95.48",
     "Comments": "Social media report of quarter size hail. Time estimated from radar. (EAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2238",
@@ -829,7 +829,7 @@
     "Lat": "40.26",
     "Lon": "-95.37",
     "Comments": "EM reported quarter-sized hail at Hwy 59 and Holt County line. (EAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2240",
@@ -842,7 +842,7 @@
     "Lat": "36.55",
     "Lon": "-95.43",
     "Comments": "relayed via media...time estimated from radar. (TSA)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2303",
@@ -855,7 +855,7 @@
     "Lat": "38.09",
     "Lon": "-94.58",
     "Comments": "Photo of approximately ping pong ball size hail in Hume relayed to NWS employee. Time estimated from radar. (EAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2308",
@@ -868,7 +868,7 @@
     "Lat": "40.72",
     "Lon": "-95.02",
     "Comments": "(OAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2312",
@@ -881,7 +881,7 @@
     "Lat": "38.01",
     "Lon": "-94.72",
     "Comments": "(SGF)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "2316",
@@ -894,7 +894,7 @@
     "Lat": "40.8",
     "Lon": "-94.91",
     "Comments": "Delayed report. (DMX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0012",
@@ -907,7 +907,7 @@
     "Lat": "40.53",
     "Lon": "-94.54",
     "Comments": "Photo relayed of golf ball size hail in Worth County. Time and location estimated from radar. (EAX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0028",
@@ -920,7 +920,7 @@
     "Lat": "40.64",
     "Lon": "-94.36",
     "Comments": "(DMX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0044",
@@ -933,7 +933,7 @@
     "Lat": "39.52",
     "Lon": "-105.04",
     "Comments": "(BOU)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0045",
@@ -946,7 +946,7 @@
     "Lat": "40.71",
     "Lon": "-94.24",
     "Comments": "Corrects previous hail report from Mount Ayr. (DMX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0103",
@@ -959,7 +959,7 @@
     "Lat": "39.56",
     "Lon": "-104.98",
     "Comments": "(BOU)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0103",
@@ -972,7 +972,7 @@
     "Lat": "40.71",
     "Lon": "-94.24",
     "Comments": "(DMX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0124",
@@ -985,7 +985,7 @@
     "Lat": "33.06",
     "Lon": "-95.01",
     "Comments": "Golfball sized hail reported near the dam of Lake Bob Sandlin. (SHV)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0130",
@@ -998,7 +998,7 @@
     "Lat": "33.15",
     "Lon": "-94.97",
     "Comments": "(SHV)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0136",
@@ -1011,7 +1011,7 @@
     "Lat": "41.5",
     "Lon": "-93.78",
     "Comments": "Report from mPING: Quarter (1.00 in.). (DMX)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "0233",
@@ -1024,7 +1024,7 @@
     "Lat": "33.49",
     "Lon": "-94.52",
     "Comments": "One inch hail was reported in the Malta community. (SHV)",
-    "Type": "hail"
+    "EventType": "hail"
   },
   {
     "Time": "1223",
@@ -1037,7 +1037,7 @@
     "Lat": "34.96",
     "Lon": "-95.77",
     "Comments": "This tornado moved across the northwest side of McAlester... damaging the roofs of homes... uprooting trees... and snapping power poles. The damage survey was conducted (TSA)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1716",
@@ -1050,7 +1050,7 @@
     "Lat": "41.02",
     "Lon": "-98.87",
     "Comments": "This tornado touched down at 1216 PM CDT 2 miles east southeast of Ravenna... and lifted at 1231 PM CDT 3 miles north of Ravenna. The rating was EF1... with an estimate (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1723",
@@ -1063,7 +1063,7 @@
     "Lat": "31.63",
     "Lon": "-97.26",
     "Comments": "A brief EF-0 tornado occurred along Wisdom Ct west of Waco. Fences were damaged and large tree limbs were broken. Maximum estimated winds were 80 mph. (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1726",
@@ -1076,7 +1076,7 @@
     "Lat": "31.63",
     "Lon": "-97.25",
     "Comments": "A second tornado from the same supercell occurred west of Waco damaging neighborhoods on either side of Wortham Bend Road near China Spring Rd. Damage in these neighbor (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1726",
@@ -1089,7 +1089,7 @@
     "Lat": "31.64",
     "Lon": "-97.25",
     "Comments": "Tornado pictures and damage reports from the China Springs area. Time estimated. (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1728",
@@ -1102,7 +1102,7 @@
     "Lat": "41.06",
     "Lon": "-98.9",
     "Comments": "Location approximate. May be adjusted. Estimated on the ground for 4 to 5 minutes. Video confirmed. (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1732",
@@ -1115,7 +1115,7 @@
     "Lat": "41.1",
     "Lon": "-98.83",
     "Comments": "This tornado touched down at 1232 PM CDT 2 miles south of Rockville... and lifted at 1248 PM CDT 4 miles north northeast of Rockville. The rating was EF1... with an est (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1738",
@@ -1128,7 +1128,7 @@
     "Lat": "41.11",
     "Lon": "-98.82",
     "Comments": "Tornado confirmed with some damage report. Will update pending damage survey. (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1748",
@@ -1141,7 +1141,7 @@
     "Lat": "31.76",
     "Lon": "-97.07",
     "Comments": "A brief... EF-0 tornado damaged trees west of Heritage Pkwy and south of Easy Rd northwest of Tours. Maximum estimated winds were 75 mph. (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1748",
@@ -1154,7 +1154,7 @@
     "Lat": "31.78",
     "Lon": "-97.05",
     "Comments": "Another tornado developed north of Tours... just west of Berger Road. This tornado initially damaged trees and a shed... but strengthened as it crossed Czech Hall Road. (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1752",
@@ -1167,7 +1167,7 @@
     "Lat": "41.18",
     "Lon": "-98.65",
     "Comments": "This tornado touched down at 1252 PM CDT 3 miles SSW of Farwell... and lifted at 1258 PM CDT just outside the south side of Farwell. The rating was EF0... with an estim (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1753",
@@ -1180,7 +1180,7 @@
     "Lat": "31.8",
     "Lon": "-97.02",
     "Comments": "Tornado pictures and reports from north of Tours to Penelope. (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1758",
@@ -1193,7 +1193,7 @@
     "Lat": "41.2",
     "Lon": "-98.62",
     "Comments": "This tornado touched down at 1258 PM CDT 1 mile south southeast of Farwell... and lifted at 121 PM CDT 3 miles north of Elba. This was the strongest tornado of the day (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1758",
@@ -1206,7 +1206,7 @@
     "Lat": "41.21",
     "Lon": "-98.63",
     "Comments": "Reported by fireman. Moving north/northeast at the time. (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1806",
@@ -1219,7 +1219,7 @@
     "Lat": "31.83",
     "Lon": "-96.97",
     "Comments": "The same supercell produced another brief... EF-1 tornado... based on eye witness accounts... on either side of FM 339 southwest of Penelope. The tornado formed in the (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1814",
@@ -1232,7 +1232,7 @@
     "Lat": "41.3",
     "Lon": "-98.58",
     "Comments": "Emergency management reported power poles down near Highway 11 and Odell Road. (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1814",
@@ -1245,7 +1245,7 @@
     "Lat": "41.31",
     "Lon": "-98.58",
     "Comments": "Several reports of confirmed tornado west and north of Elba. Time and location approximate pending damage survey. (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1830",
@@ -1258,7 +1258,7 @@
     "Lat": "31.95",
     "Lon": "-96.8",
     "Comments": "A tornado formed just northwest of Navarro Mills Lake... just east of the Navarro/Hill County line. Damage near this initiation point was confined to split tree trunks (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1832",
@@ -1271,7 +1271,7 @@
     "Lat": "41.34",
     "Lon": "-98.51",
     "Comments": "This tornado touched down at 132 PM CDT 5 miles northeast of Elba... and lifted at 154 PM CDT 3 miles north of Wolbach. The rating was EF2... with an estimated peak win (GID)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1837",
@@ -1284,7 +1284,7 @@
     "Lat": "32",
     "Lon": "-96.75",
     "Comments": "Tornado reported near FM 477 near Brushie Prairie in western Navarro Co. (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1848",
@@ -1297,7 +1297,7 @@
     "Lat": "32.08",
     "Lon": "-96.67",
     "Comments": "A tornado formed approximately 2 miles southwest of Barry in open country... based on storm spotter video and eyewitness reports. This tornado moved north and northeast (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1849",
@@ -1310,7 +1310,7 @@
     "Lat": "31.88",
     "Lon": "-97.09",
     "Comments": "An EF-1 tornado occurred near Abbott... first developing on the west side of I-35W and CR 2341 where trees were damaged and uprooted. A semi-tractor trailer was rolled (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1900",
@@ -1323,7 +1323,7 @@
     "Lat": "41.1",
     "Lon": "-97.1",
     "Comments": "Center pivot overturned... tree and outbuilding damage... road signs torn down. Delayed report. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1904",
@@ -1336,7 +1336,7 @@
     "Lat": "41.54",
     "Lon": "-98.29",
     "Comments": "A EF-2 tornado started in Greeley County and crossed into Boone County south of Primrose along Highway 56. It travelled north-northeast over 27.5 miles... doing its mos (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1919",
@@ -1349,7 +1349,7 @@
     "Lat": "32.23",
     "Lon": "-96.55",
     "Comments": "A citizen captured a video of a brief tornado which formed west of Rice... Texas. The tornado transited mainly bottomland/wetland areas of Cummins Creek... resulting in (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1930",
@@ -1362,7 +1362,7 @@
     "Lat": "32.07",
     "Lon": "-96.83",
     "Comments": "A brief EF-0 tornado occurred west of Frost in far northwestern Navarro County. A grain elevator was impacted and partially collapsed along State Highway 22 west of Fro (FWD)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1943",
@@ -1375,7 +1375,7 @@
     "Lat": "40.88",
     "Lon": "-96.75",
     "Comments": "Brief tornado touchdown near the Kawasaki Plant. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1950",
@@ -1388,7 +1388,7 @@
     "Lat": "40.87",
     "Lon": "-96.64",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1951",
@@ -1401,7 +1401,7 @@
     "Lat": "40.88",
     "Lon": "-96.59",
     "Comments": "Building collapse. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1951",
@@ -1414,7 +1414,7 @@
     "Lat": "41.05",
     "Lon": "-97.11",
     "Comments": "An EF-1 tornado began near the intersection of Highway 15 and Ashland Road moving north-northeast as a broad multiple-vortex tornado. It snapped trees and a road sign a (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1952",
@@ -1427,7 +1427,7 @@
     "Lat": "40.85",
     "Lon": "-96.61",
     "Comments": "*** 3 INJ *** This EF3 tornado touched down on the northeast side of Lincoln near the intersection of Havelock Ave and 84th street causing damage to a business and a la (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1953",
@@ -1440,7 +1440,7 @@
     "Lat": "40.93",
     "Lon": "-96.55",
     "Comments": "House damaged. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1954",
@@ -1453,7 +1453,7 @@
     "Lat": "41.08",
     "Lon": "-97.11",
     "Comments": "Relayed from emergency management. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1955",
@@ -1466,7 +1466,7 @@
     "Lat": "41.72",
     "Lon": "-98.2",
     "Comments": "4 pivots overturned. 2 hog confinements destroyed. Delay report. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1957",
@@ -1479,7 +1479,7 @@
     "Lat": "40.89",
     "Lon": "-96.59",
     "Comments": "Train derailment Hwy 6. Additional train derailment Hwy 6 and I-480. Semi-rolled over. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1959",
@@ -1492,7 +1492,7 @@
     "Lat": "40.93",
     "Lon": "-96.57",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2000",
@@ -1505,7 +1505,7 @@
     "Lat": "41.13",
     "Lon": "-97.13",
     "Comments": "Social media photo of confirmed tornado 9 miles south of David City... Nebraska. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2003",
@@ -1518,7 +1518,7 @@
     "Lat": "40.96",
     "Lon": "-96.56",
     "Comments": "An EF-0 tornado tracked mainly through open fields... with time and location identified by a storm chaser video. The damage survey team did find evidence of some minor (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2005",
@@ -1531,7 +1531,7 @@
     "Lat": "41.21",
     "Lon": "-97.06",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2006",
@@ -1544,7 +1544,7 @@
     "Lat": "41.16",
     "Lon": "-97.07",
     "Comments": "Trained spotters confirmed an EF-Unknown tornado with video and photos lasting approximately 1 minute over open fields. Due to no damage indicators hit... we have to ra (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2006",
@@ -1557,7 +1557,7 @@
     "Lat": "41.58",
     "Lon": "-97.89",
     "Comments": "Small rope tornado. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2007",
@@ -1570,7 +1570,7 @@
     "Lat": "41.17",
     "Lon": "-97.06",
     "Comments": "Trained spotter reported a tornado just southwest of Brainard... Nebraska. Tornado has since lifted but there are two additional funnel clouds currently. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2012",
@@ -1583,7 +1583,7 @@
     "Lat": "41.03",
     "Lon": "-96.48",
     "Comments": "An EF-1 tornado tracked through mainly open fields... snapping tree trucks. There was one farmstead that had a barn that was badly damaged and minor damage to a home. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2015",
@@ -1596,7 +1596,7 @@
     "Lat": "41.01",
     "Lon": "-96.48",
     "Comments": "EM relayed report from 911 call center of confirmed tornado to the west of Ashland... Nebraska. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2025",
@@ -1609,7 +1609,7 @@
     "Lat": "41.19",
     "Lon": "-96.34",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2029",
@@ -1622,7 +1622,7 @@
     "Lat": "41.63",
     "Lon": "-97.69",
     "Comments": "Emergency manager reported a tornado on the ground 4 to 5 miles south of Lindsay. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2030",
@@ -1635,7 +1635,7 @@
     "Lat": "41.19",
     "Lon": "-96.32",
     "Comments": "The EF3 tornado developed about one quarter mile west of the West Q Road and 255th St intersection in Western Douglas county where trees were knocked down and a farmste (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2030",
@@ -1648,7 +1648,7 @@
     "Lat": "41.2",
     "Lon": "-96.31",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2036",
@@ -1661,7 +1661,7 @@
     "Lat": "41.22",
     "Lon": "-96.31",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2037",
@@ -1674,7 +1674,7 @@
     "Lat": "41.26",
     "Lon": "-96.28",
     "Comments": "Vehicle and building damage. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2039",
@@ -1687,7 +1687,7 @@
     "Lat": "41.29",
     "Lon": "-96.23",
     "Comments": "House with severe roof damage. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2040",
@@ -1700,7 +1700,7 @@
     "Lat": "41.23",
     "Lon": "-96.3",
     "Comments": "240th and Dodge. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2042",
@@ -1713,7 +1713,7 @@
     "Lat": "37.74",
     "Lon": "-95.89",
     "Comments": "storm chaser report. (ICT)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2043",
@@ -1726,7 +1726,7 @@
     "Lat": "37.53",
     "Lon": "-95.94",
     "Comments": "Video confirmation of a tornado. (ICT)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2045",
@@ -1739,7 +1739,7 @@
     "Lat": "41.29",
     "Lon": "-96.26",
     "Comments": "Very large tornado moving into western Elkhorn. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2047",
@@ -1752,7 +1752,7 @@
     "Lat": "41.29",
     "Lon": "-96.24",
     "Comments": "Very large tornado moving through western Elkhorn. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2047",
@@ -1765,7 +1765,7 @@
     "Lat": "41.75",
     "Lon": "-97.87",
     "Comments": "Emergency Manager reported confirmed large tornado 4 to 5 miles west of Newman Grove. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2047",
@@ -1778,7 +1778,7 @@
     "Lat": "41.75",
     "Lon": "-97.91",
     "Comments": "EM reported the tornado and there is video evidence from a storm chaser. No damage was found and so this tornado was rated an EF Unknown. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2049",
@@ -1791,7 +1791,7 @@
     "Lat": "41.32",
     "Lon": "-96.23",
     "Comments": "Very large tornado near 204th and Ida. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2050",
@@ -1804,7 +1804,7 @@
     "Lat": "41.75",
     "Lon": "-97.86",
     "Comments": "Tornado moving east. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2052",
@@ -1817,7 +1817,7 @@
     "Lat": "37.82",
     "Lon": "-95.77",
     "Comments": "(ICT)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2052",
@@ -1830,7 +1830,7 @@
     "Lat": "41.32",
     "Lon": "-96.23",
     "Comments": "Very large tornado near Flanagan Lake. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2055",
@@ -1843,7 +1843,7 @@
     "Lat": "41.35",
     "Lon": "-96.2",
     "Comments": "Major structural damage to at least 10 homes. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2059",
@@ -1856,7 +1856,7 @@
     "Lat": "41.39",
     "Lon": "-96.17",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2100",
@@ -1869,7 +1869,7 @@
     "Lat": "41.36",
     "Lon": "-96.18",
     "Comments": "Multiple homes destroyed. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2105",
@@ -1882,7 +1882,7 @@
     "Lat": "41.46",
     "Lon": "-96.18",
     "Comments": "Homes damaged. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2107",
@@ -1895,7 +1895,7 @@
     "Lat": "41.6",
     "Lon": "-97.36",
     "Comments": "An EF1 tornado touched down northwest of 370th St and 175th Ave. It tracked north-northeast... flipping a center-pivot irrigation system... snapping trees... blowing wi (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2108",
@@ -1908,7 +1908,7 @@
     "Lat": "41.47",
     "Lon": "-96.13",
     "Comments": "Destroyed homes. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2110",
@@ -1921,7 +1921,7 @@
     "Lat": "41.49",
     "Lon": "-96.11",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2116",
@@ -1934,7 +1934,7 @@
     "Lat": "41.7",
     "Lon": "-97.36",
     "Comments": "Tornado on the ground south on 18th ave. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2118",
@@ -1947,7 +1947,7 @@
     "Lat": "41.51",
     "Lon": "-96.07",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2118",
@@ -1960,7 +1960,7 @@
     "Lat": "41.67",
     "Lon": "-97.31",
     "Comments": "Building and tree damage to an abandoned farmstead. Delayed report. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2120",
@@ -1973,7 +1973,7 @@
     "Lat": "41.55",
     "Lon": "-96.04",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2123",
@@ -1986,7 +1986,7 @@
     "Lat": "41.69",
     "Lon": "-97.33",
     "Comments": "Multiple vortex tornado. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2135",
@@ -1999,7 +1999,7 @@
     "Lat": "41.62",
     "Lon": "-96.01",
     "Comments": "Tornado near Modale looks like it roped out. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2152",
@@ -2012,7 +2012,7 @@
     "Lat": "41.04",
     "Lon": "-95.8",
     "Comments": "An EF1 tornado damage path began approximately 1 mile north of Pacific Junction... where the tornado was also reported by a trained spotter. The tornado crossed Highway (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2152",
@@ -2025,7 +2025,7 @@
     "Lat": "41.75",
     "Lon": "-95.91",
     "Comments": "An EF-1 tornado touched down south of 174th Trl tracking north-northeast snapping power poles... trees... and doing damage to several agricultural out-buildings. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2156",
@@ -2038,7 +2038,7 @@
     "Lat": "41.27",
     "Lon": "-95.93",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2157",
@@ -2051,7 +2051,7 @@
     "Lat": "41.04",
     "Lon": "-95.82",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2158",
@@ -2064,7 +2064,7 @@
     "Lat": "41.3",
     "Lon": "-95.88",
     "Comments": "This EF3 tornado developed just east of the Eppley Airfield runway system... about one-quarter mile west of the Amelia Earhart Plaza and Lindbergh Plaza intersection. T (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2159",
@@ -2077,7 +2077,7 @@
     "Lat": "41.8",
     "Lon": "-95.89",
     "Comments": "Based on eyewitness observation of two simultaneous tornadoes passing east and west of a farmstead... with 5NNW Magnolia being the western tornado observed. Little dama (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2201",
@@ -2090,7 +2090,7 @@
     "Lat": "41.3",
     "Lon": "-95.87",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2202",
@@ -2103,7 +2103,7 @@
     "Lat": "37.79",
     "Lon": "-95.3",
     "Comments": "Storm chaser video showed brief tornado. (ICT)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2205",
@@ -2116,7 +2116,7 @@
     "Lat": "41.87",
     "Lon": "-95.91",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2207",
@@ -2129,7 +2129,7 @@
     "Lat": "41.36",
     "Lon": "-95.86",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2208",
@@ -2142,7 +2142,7 @@
     "Lat": "41.19",
     "Lon": "-95.73",
     "Comments": "This EF3 tornado damage path began near Aspen Road... just west of 240th Street. The tornado tracked toward the north northeast... snapping trees and electrical poles a (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2209",
@@ -2155,7 +2155,7 @@
     "Lat": "41.17",
     "Lon": "-95.75",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2210",
@@ -2168,7 +2168,7 @@
     "Lat": "40.11",
     "Lon": "-95.73",
     "Comments": "DELAYED REPORT. Emergency Management reported a tornado on the ground 2 miles north of Salem... Nebraska. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2210",
@@ -2181,7 +2181,7 @@
     "Lat": "40.12",
     "Lon": "-95.72",
     "Comments": "Emergency Manager reported a tornado and no damage was found. This tornado is rated an EF Unknown. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2213",
@@ -2194,7 +2194,7 @@
     "Lat": "41.23",
     "Lon": "-95.73",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2214",
@@ -2207,7 +2207,7 @@
     "Lat": "41.19",
     "Lon": "-95.7",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2216",
@@ -2220,7 +2220,7 @@
     "Lat": "41.99",
     "Lon": "-97.37",
     "Comments": "This brief EF1 tornado touched down near Grandview Road and East Sherwood Rood... causing tree damage at a farmstead. The tornado moved northeast... damaging large tree (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2217",
@@ -2233,7 +2233,7 @@
     "Lat": "41.96",
     "Lon": "-95.81",
     "Comments": "A short-lived tornado developed in an agricultural field and moved generally northeast across fields and pastureland... damaging outbuildings of farmsteads near the int (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2220",
@@ -2246,7 +2246,7 @@
     "Lat": "41.48",
     "Lon": "-95.75",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2220",
@@ -2259,7 +2259,7 @@
     "Lat": "42",
     "Lon": "-97.37",
     "Comments": "Possible tornado. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2223",
@@ -2272,7 +2272,7 @@
     "Lat": "41.97",
     "Lon": "-95.81",
     "Comments": "An EF1 tornado developed near the intersection of 260th and 270th Streets. It produced damage to outbuildings at a farmstead near the intersection... and tossed some fi (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2225",
@@ -2285,7 +2285,7 @@
     "Lat": "41.33",
     "Lon": "-95.62",
     "Comments": "*** 1 FATAL... 3 INJ *** An EF3 tornado developed approximately 3 miles east of McClelland... and developed prior to the dissipation of the tornado that tracked near Tr (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2228",
@@ -2298,7 +2298,7 @@
     "Lat": "41.36",
     "Lon": "-95.65",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2229",
@@ -2311,7 +2311,7 @@
     "Lat": "37.89",
     "Lon": "-94.96",
     "Comments": "A weak EF-0 tornado occurred... with a path length of 3.12 miles and a width of 75 yards. Maximum wind speeds of 85 mph led to siding damage on a home... five outbuildi (SGF)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2233",
@@ -2324,7 +2324,7 @@
     "Lat": "41.37",
     "Lon": "-95.65",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2240",
@@ -2337,7 +2337,7 @@
     "Lat": "41.43",
     "Lon": "-95.57",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2241",
@@ -2350,7 +2350,7 @@
     "Lat": "41.47",
     "Lon": "-95.54",
     "Comments": "Very large tornado. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2241",
@@ -2363,7 +2363,7 @@
     "Lat": "41.62",
     "Lon": "-95.73",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2245",
@@ -2376,7 +2376,7 @@
     "Lat": "37.88",
     "Lon": "-94.82",
     "Comments": "Spotter indicated brief touchdown. (SGF)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2245",
@@ -2389,7 +2389,7 @@
     "Lat": "40.03",
     "Lon": "-95.44",
     "Comments": "DELAYED REPORT. Emergency Manager relayed report of a tornado near Rulo over NAWAS. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2245",
@@ -2402,7 +2402,7 @@
     "Lat": "41.48",
     "Lon": "-95.52",
     "Comments": "Large tornado destroying homes. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2247",
@@ -2415,7 +2415,7 @@
     "Lat": "41.48",
     "Lon": "-95.5",
     "Comments": "Very large multi vortex tornado. At least 1/3 mile wide. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2249",
@@ -2428,7 +2428,7 @@
     "Lat": "41.51",
     "Lon": "-95.48",
     "Comments": "Multiple houses damaged. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2250",
@@ -2441,7 +2441,7 @@
     "Lat": "41.5",
     "Lon": "-95.48",
     "Comments": "Very large tornado crossing Interstate 80. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2257",
@@ -2454,7 +2454,7 @@
     "Lat": "41.56",
     "Lon": "-95.45",
     "Comments": "Multiple destroyed outbuildings and a home that lost a roof. Time estimated from radar. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2259",
@@ -2467,7 +2467,7 @@
     "Lat": "41.59",
     "Lon": "-95.44",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2305",
@@ -2480,7 +2480,7 @@
     "Lat": "41.65",
     "Lon": "-95.37",
     "Comments": "Significant damage between Portsmith and Harlan. Destroyed home... cars flipped. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2305",
@@ -2493,7 +2493,7 @@
     "Lat": "41.65",
     "Lon": "-95.38",
     "Comments": "Multi vortex tornado. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2306",
@@ -2506,7 +2506,7 @@
     "Lat": "41.65",
     "Lon": "-95.37",
     "Comments": "Home destroyed. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2307",
@@ -2519,7 +2519,7 @@
     "Lat": "37.99",
     "Lon": "-94.51",
     "Comments": "An EF-1 tornado occurred... with a path length of 3.4 miles and a width of 95 yards. Maximum wind speeds of 95 mph destroyed two outbuildings... and caused a number of (SGF)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2314",
@@ -2532,7 +2532,7 @@
     "Lat": "40.25",
     "Lon": "-95.08",
     "Comments": "Fire dept. reported weak tornado. (EAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2317",
@@ -2545,7 +2545,7 @@
     "Lat": "41.72",
     "Lon": "-95.35",
     "Comments": "(OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2328",
@@ -2558,7 +2558,7 @@
     "Lat": "41.86",
     "Lon": "-95.26",
     "Comments": "An EF2 tornado damage track begins near the V\u0026W Petersen Wildlife Management Area... and moved almost due north from that point... tracking just to the west of Manilla. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2336",
@@ -2571,7 +2571,7 @@
     "Lat": "38.12",
     "Lon": "-94.22",
     "Comments": "Fire department reported a tornado east of Rich Hill. Time and location estimated from radar. (EAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2342",
@@ -2584,7 +2584,7 @@
     "Lat": "38.17",
     "Lon": "-94.09",
     "Comments": "NWS Damage Survey confirmed a brief EF-0 tornado southwest of Appleton City... MO the evening of the 26th of April... 2024. Minor damage to trees along the path. (EAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2351",
@@ -2597,7 +2597,7 @@
     "Lat": "41.82",
     "Lon": "-95.34",
     "Comments": "Delayed report. Video of tornado producing damage. One outbuilding destroyed. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2351",
@@ -2610,7 +2610,7 @@
     "Lat": "41.83",
     "Lon": "-95.33",
     "Comments": "A second round of storms moved across Shelby and Crawford counties. An EF1 tornado developed just a few blocks outside of Defiance... near the track that the first torn (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2353",
@@ -2623,7 +2623,7 @@
     "Lat": "38.18",
     "Lon": "-94.06",
     "Comments": "Damage to a structure near Appleton City Lake. Time estimated from radar. (EAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2353",
@@ -2636,7 +2636,7 @@
     "Lat": "38.19",
     "Lon": "-94.06",
     "Comments": "Downed trees blocking Highway 52 west of Appleton City near the St. Clair County line. Time estimated from radar. (EAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2355",
@@ -2649,7 +2649,7 @@
     "Lat": "41.84",
     "Lon": "-95.33",
     "Comments": "DELAYED REPORT. Media relayed photo of tornado approximately 1 mile northeast of Defiance... Iowa. (OAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2356",
@@ -2662,7 +2662,7 @@
     "Lat": "38.19",
     "Lon": "-94.05",
     "Comments": "An NWS storm survey determined that a tornado briefly touched down Friday evening on Highway 52 at the Bates and St Clair county line... downing trees and power lines. (SGF)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "2358",
@@ -2675,7 +2675,7 @@
     "Lat": "41.89",
     "Lon": "-95.27",
     "Comments": "Storm chaser shared a picture of a tornado just west of Manilla. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0004",
@@ -2688,7 +2688,7 @@
     "Lat": "41.05",
     "Lon": "-94.4",
     "Comments": "Tornado on the ground... heading northeast. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0009",
@@ -2701,7 +2701,7 @@
     "Lat": "41.06",
     "Lon": "-94.36",
     "Comments": "Tornado with debris near the hospital in Creston. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0010",
@@ -2714,7 +2714,7 @@
     "Lat": "40.91",
     "Lon": "-94.52",
     "Comments": "near 205th and Highway 25. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0015",
@@ -2727,7 +2727,7 @@
     "Lat": "41.13",
     "Lon": "-94.29",
     "Comments": "Tornado reported to the southwest of Macksburg. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0023",
@@ -2740,7 +2740,7 @@
     "Lat": "40.56",
     "Lon": "-94.43",
     "Comments": "Tornado developed near Highway E west of U.S. Highway 169... causing minor damage to a residence. Tornado tracked northeastward into Iowa. Time estimated from radar. (EAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0025",
@@ -2753,7 +2753,7 @@
     "Lat": "41.05",
     "Lon": "-94.27",
     "Comments": "Power poles with debris on US Highway 34 between Creston and Afton. Highway is closed. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0028",
@@ -2766,7 +2766,7 @@
     "Lat": "41.06",
     "Lon": "-94.27",
     "Comments": "Trained spotter reported tornado on the ground east of Creston. Time and location estimated from radar. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0031",
@@ -2779,7 +2779,7 @@
     "Lat": "41.05",
     "Lon": "-94.22",
     "Comments": "(DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0034",
@@ -2792,7 +2792,7 @@
     "Lat": "38.35",
     "Lon": "-93.72",
     "Comments": "NWS Damage Survey confirms a very brief EF-0 tornado southeast of Clinton... MO. Damage to two outbuildings. (EAX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0047",
@@ -2805,7 +2805,7 @@
     "Lat": "40.71",
     "Lon": "-94.21",
     "Comments": "Delayed report. Report of tornado between Mt Ayr and Kellerton. Exact location estimated from radar. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0054",
@@ -2818,7 +2818,7 @@
     "Lat": "41.03",
     "Lon": "-94.23",
     "Comments": "Large tornado near Afton moving northeast. Debris field reported with damage. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0058",
@@ -2831,7 +2831,7 @@
     "Lat": "41.24",
     "Lon": "-94.02",
     "Comments": "Tornado near Word of Life Church. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0115",
@@ -2844,7 +2844,7 @@
     "Lat": "41.37",
     "Lon": "-93.85",
     "Comments": "Delayed report. Video submitted via social media. Briefly touched down and lifted west of Martensdale. Location estimated from radar. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0118",
@@ -2857,7 +2857,7 @@
     "Lat": "41.32",
     "Lon": "-93.88",
     "Comments": "Reported to the south of Patterson. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0119",
@@ -2870,7 +2870,7 @@
     "Lat": "41.48",
     "Lon": "-93.84",
     "Comments": "Tornadic debris signature noted on radar. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0129",
@@ -2883,7 +2883,7 @@
     "Lat": "40.97",
     "Lon": "-93.8",
     "Comments": "Corrects previous tornado report from 4 S Osceola. Time estimated. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0136",
@@ -2896,7 +2896,7 @@
     "Lat": "41.03",
     "Lon": "-93.77",
     "Comments": "Damage reported near Osceola. Trees and power lines down. Time estimated from radar. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0154",
@@ -2909,7 +2909,7 @@
     "Lat": "41.63",
     "Lon": "-93.56",
     "Comments": "Structure damage to a home with possible injury. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0156",
@@ -2922,7 +2922,7 @@
     "Lat": "41.55",
     "Lon": "-93.57",
     "Comments": "Reported by General Public. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0159",
@@ -2935,7 +2935,7 @@
     "Lat": "41.59",
     "Lon": "-93.51",
     "Comments": "Power flashes reported near Pleasant Hill. TDS also noted on radar. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0241",
@@ -2948,7 +2948,7 @@
     "Lat": "41.52",
     "Lon": "-93.1",
     "Comments": "*** 1 INJ *** Reports of damage in Monroe. Time estimated from radar. Update for injury. (DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "0403",
@@ -2961,7 +2961,7 @@
     "Lat": "40.97",
     "Lon": "-93.8",
     "Comments": "(DMX)",
-    "Type": "tornado"
+    "EventType": "tornado"
   },
   {
     "Time": "1245",
@@ -2974,7 +2974,7 @@
     "Lat": "34.94",
     "Lon": "-95.77",
     "Comments": "Large trees and power lines down. (TSA)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "1251",
@@ -2987,7 +2987,7 @@
     "Lat": "34.94",
     "Lon": "-95.59",
     "Comments": "(TSA)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "1935",
@@ -3000,7 +3000,7 @@
     "Lat": "36.06",
     "Lon": "-115.06",
     "Comments": "Powerline knocked down due to high winds as showers and thunderstorms moved through the Las Vegas Valley. (VEF)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "1955",
@@ -3013,7 +3013,7 @@
     "Lat": "40.88",
     "Lon": "-96.59",
     "Comments": "Building collapsed with people inside. Potential gas leak. (OAX)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "1955",
@@ -3026,7 +3026,7 @@
     "Lat": "40.92",
     "Lon": "-96.52",
     "Comments": "Numerous reports of damage near Waverly... including trains blown off tracks... semis overturned. (OAX)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2120",
@@ -3039,7 +3039,7 @@
     "Lat": "32.49",
     "Lon": "-96.25",
     "Comments": "Gust measured by home weather station. Damage to trees on property. Chicken coop blown away. Time estimated from radar. (FWD)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2125",
@@ -3052,7 +3052,7 @@
     "Lat": "32.49",
     "Lon": "-96.21",
     "Comments": "Reports of several trees down near Becker... including one that fell on a house. A construction light was also blown over. Time estimated from radar. (FWD)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2145",
@@ -3065,7 +3065,7 @@
     "Lat": "32.93",
     "Lon": "-95.58",
     "Comments": "Trees down on multiple county roads in and around the Yantis community. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2151",
@@ -3078,7 +3078,7 @@
     "Lat": "32.56",
     "Lon": "-95.87",
     "Comments": "Tree down with approximately a 12 inch trunk near SH 64 and FM 859. (FWD)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2204",
@@ -3091,7 +3091,7 @@
     "Lat": "41.3",
     "Lon": "-95.89",
     "Comments": "Delayed report. ASOS at Eppley Airfield. Measured wind gust as tornado moved very nearby. (OAX)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2205",
@@ -3104,7 +3104,7 @@
     "Lat": "33",
     "Lon": "-95.27",
     "Comments": "Power poles downed across the southern part of Franklin County... Texas. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2205",
@@ -3117,7 +3117,7 @@
     "Lat": "33.02",
     "Lon": "-95.27",
     "Comments": "Trees downed on two structures between Mount Vernon and Winnsboro. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2218",
@@ -3130,7 +3130,7 @@
     "Lat": "40.08",
     "Lon": "-95.59",
     "Comments": "(OAX)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2220",
@@ -3143,7 +3143,7 @@
     "Lat": "42",
     "Lon": "-97.36",
     "Comments": "delayed report Roof taken off athletic training center. (OAX)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2222",
@@ -3156,7 +3156,7 @@
     "Lat": "32.48",
     "Lon": "-96.35",
     "Comments": "Trees down on CR 4079. (FWD)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2225",
@@ -3169,7 +3169,7 @@
     "Lat": "33",
     "Lon": "-94.96",
     "Comments": "Extensive trees and powerlines downed across the entire county. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2226",
@@ -3182,7 +3182,7 @@
     "Lat": "33.16",
     "Lon": "-94.98",
     "Comments": "Numerous trees and powerlines downed in and around the Mount Pleasant area. Three vehicles were impacted by falling trees with rescues ongoing attm. Worst damage was re (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2230",
@@ -3195,7 +3195,7 @@
     "Lat": "33.1",
     "Lon": "-94.97",
     "Comments": "Measured AWOS wind gust at the Mount Pleasant Airport. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2230",
@@ -3208,7 +3208,7 @@
     "Lat": "34.17",
     "Lon": "-93.63",
     "Comments": "A few trees were blown down in this area. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2240",
@@ -3221,7 +3221,7 @@
     "Lat": "33.12",
     "Lon": "-94.7",
     "Comments": "Numerous trees down in and around the Rocky Branch community. Traffic stuck on highways because of all the downed trees across roadways. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2250",
@@ -3234,7 +3234,7 @@
     "Lat": "33.67",
     "Lon": "-93.59",
     "Comments": "Trees and power lines down. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2301",
@@ -3247,7 +3247,7 @@
     "Lat": "37.96",
     "Lon": "-94.66",
     "Comments": "Large trees down. (SGF)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2310",
@@ -3260,7 +3260,7 @@
     "Lat": "33.33",
     "Lon": "-94.35",
     "Comments": "Several trees downed in and around the city of Maud... Texas. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2320",
@@ -3273,7 +3273,7 @@
     "Lat": "33",
     "Lon": "-94.63",
     "Comments": "Trees and power lines down. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2330",
@@ -3286,7 +3286,7 @@
     "Lat": "33.42",
     "Lon": "-94.11",
     "Comments": "Trees and powerlines reported down on the Bowie County side of Texarkana. (SHV)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "2349",
@@ -3299,7 +3299,7 @@
     "Lat": "34.38",
     "Lon": "-92.82",
     "Comments": "Large tree blown on top of a car causing considerable damage to the vehicle. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0000",
@@ -3312,7 +3312,7 @@
     "Lat": "34.57",
     "Lon": "-92.58",
     "Comments": "Large tree and numerous powerlines are down on Highway 35 South. A tree was also on fire. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0000",
@@ -3325,7 +3325,7 @@
     "Lat": "34.84",
     "Lon": "-112.48",
     "Comments": "Wind from 315 degrees measured at 57 mph. Damage estimate $75...000+ Some rain. (FGZ)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0018",
@@ -3338,7 +3338,7 @@
     "Lat": "34.67",
     "Lon": "-92.36",
     "Comments": "1-inch tree limbs broken; Shingles blown off. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0025",
@@ -3351,7 +3351,7 @@
     "Lat": "34.77",
     "Lon": "-92.34",
     "Comments": "A tree was blown over at this location. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0025",
@@ -3364,7 +3364,7 @@
     "Lat": "34.9",
     "Lon": "-92.23",
     "Comments": "Large tree limbs down in Gibson. Winds estimated to be 60 mph. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0028",
@@ -3377,7 +3377,7 @@
     "Lat": "34.84",
     "Lon": "-92.21",
     "Comments": "Large tree blown over and resting on a powerline. Numerous people without power. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0030",
@@ -3390,7 +3390,7 @@
     "Lat": "35.09",
     "Lon": "-92.21",
     "Comments": "Trees reported blown down in Vilonia. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0045",
@@ -3403,7 +3403,7 @@
     "Lat": "34.97",
     "Lon": "-92.02",
     "Comments": "Trees reported down in the Magness Creek area of Cabot. Numerous power outages reported as well. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0048",
@@ -3416,7 +3416,7 @@
     "Lat": "35.01",
     "Lon": "-91.98",
     "Comments": "Hardwood fence blown over. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0049",
@@ -3429,7 +3429,7 @@
     "Lat": "36.74",
     "Lon": "-94.85",
     "Comments": "Numerous large tree limbs down. Time estimated by radar. (TSA)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0055",
@@ -3442,7 +3442,7 @@
     "Lat": "35.08",
     "Lon": "-91.89",
     "Comments": "Trees down on houses... powerlines blown over and billboards damaged in town. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0100",
@@ -3455,7 +3455,7 @@
     "Lat": "34.08",
     "Lon": "-112.14",
     "Comments": "Trained spotted estimated a 60 mph wind gust in Black Canyon City. Damage reported to digital weather station. Time estimated from radar. (FGZ)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0100",
@@ -3468,7 +3468,7 @@
     "Lat": "34.08",
     "Lon": "-112.14",
     "Comments": "Large tree limbs and branches broken in Black Canyon City. Time estimated from radar. (FGZ)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0110",
@@ -3481,7 +3481,7 @@
     "Lat": "35.25",
     "Lon": "-91.73",
     "Comments": "Numerous large trees down in Searcy... powerlines also reported down along with fence damage. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0115",
@@ -3494,7 +3494,7 @@
     "Lat": "41.16",
     "Lon": "-94.06",
     "Comments": "Time estimated from radar. Measured by personal weather station. (DMX)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0138",
@@ -3507,7 +3507,7 @@
     "Lat": "35.29",
     "Lon": "-91.36",
     "Comments": "Multiple large tree branches were blown across Highway 64. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   },
   {
     "Time": "0152",
@@ -3520,6 +3520,6 @@
     "Lat": "35.45",
     "Lon": "-91.23",
     "Comments": "Numerous trees and powerlines down in Weldon. Power is also out. (LZK)",
-    "Type": "wind"
+    "EventType": "wind"
   }
 ]

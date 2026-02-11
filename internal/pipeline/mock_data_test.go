@@ -46,7 +46,7 @@ func TestStormTransformer_WithMockJSONData(t *testing.T) {
 				out, err := transformer.Transform(context.Background(), raw)
 				require.NoError(t, err)
 				assert.NotEmpty(t, out.Key)
-				assert.Equal(t, tc.eventType, out.Headers["type"])
+				assert.Equal(t, tc.eventType, out.Headers["event_type"])
 				assert.NotEmpty(t, out.Headers["processed_at"])
 
 				var roundtrip domain.StormEvent
@@ -76,7 +76,7 @@ func readCombinedRows(t *testing.T) []mockJSONRow {
 func filterRowsByType(rows []mockJSONRow, eventType string) []mockJSONRow {
 	filtered := make([]mockJSONRow, 0, len(rows))
 	for _, row := range rows {
-		if strings.EqualFold(row["Type"], eventType) {
+		if strings.EqualFold(row["EventType"], eventType) {
 			filtered = append(filtered, row)
 		}
 	}

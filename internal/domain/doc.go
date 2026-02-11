@@ -5,7 +5,7 @@
 // Storm reports originate from the NOAA Storm Prediction Center (SPC) daily
 // CSV files, available at https://www.spc.noaa.gov/climo/reports/. The upstream
 // collector service fetches these CSVs on a cron schedule, parses them, injects
-// a "Type" field, and publishes each row as flat JSON to the Kafka source topic.
+// an "EventType" field, and publishes each row as flat JSON to the Kafka source topic.
 //
 // # NWS Data Conventions
 //

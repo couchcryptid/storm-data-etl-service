@@ -273,7 +273,7 @@ func checkETLCounts(p *phase, etl []domain.RawCSVRecord, source map[string][]csv
 
 	typeCounts := map[string]int{}
 	for i := range etl {
-		typeCounts[etl[i].Type]++
+		typeCounts[etl[i].EventType]++
 	}
 	for _, s := range specs {
 		expected := len(source[s.eventType])
@@ -287,10 +287,10 @@ func checkETLCounts(p *phase, etl []domain.RawCSVRecord, source map[string][]csv
 func checkETLTypes(p *phase, etl []domain.RawCSVRecord) {
 	validTypes := map[string]bool{"hail": true, "tornado": true, "wind": true}
 	for i := range etl {
-		if etl[i].Type == "" {
-			p.errorf("ETL record %d: missing Type field", i)
-		} else if !validTypes[etl[i].Type] {
-			p.errorf("ETL record %d: invalid Type %q", i, etl[i].Type)
+		if etl[i].EventType == "" {
+			p.errorf("ETL record %d: missing EventType field", i)
+		} else if !validTypes[etl[i].EventType] {
+			p.errorf("ETL record %d: invalid EventType %q", i, etl[i].EventType)
 		}
 	}
 }
@@ -298,7 +298,7 @@ func checkETLTypes(p *phase, etl []domain.RawCSVRecord) {
 func checkETLCrossRef(p *phase, etl []domain.RawCSVRecord, source map[string][]csvRow) {
 	etlIndex := map[string]int{}
 	for i := range etl {
-		key := etl[i].Type + "|" + etl[i].State + "|" + etl[i].Lat + "|" + etl[i].Lon + "|" + etl[i].Time
+		key := etl[i].EventType + "|" + etl[i].State + "|" + etl[i].Lat + "|" + etl[i].Lon + "|" + etl[i].Time
 		etlIndex[key]++
 	}
 
@@ -334,13 +334,13 @@ func checkETLMagnitudeColumns(p *phase, etl []domain.RawCSVRecord) {
 	}
 
 	for i := range etl {
-		cols, ok := forbidden[etl[i].Type]
+		cols, ok := forbidden[etl[i].EventType]
 		if !ok {
 			continue
 		}
 		for _, col := range cols {
 			if v := getField(etl[i], col.name); v != "" {
-				p.errorf("ETL record %d: %s record has %s=%q (should be empty)", i, etl[i].Type, col.name, v)
+				p.errorf("ETL record %d: %s record has %s=%q (should be empty)", i, etl[i].EventType, col.name, v)
 			}
 		}
 	}
@@ -392,7 +392,7 @@ func validateAPITransformation(api []domain.StormEvent, etl []domain.RawCSVRecor
 
 		apiEvent, ok := apiByID[enriched.ID]
 		if !ok {
-			p.errorf("ETL record %d (%s): ID %q not found in API JSON", i, etl[i].Type, enriched.ID)
+			p.errorf("ETL record %d (%s): ID %q not found in API JSON", i, etl[i].EventType, enriched.ID)
 			continue
 		}
 

@@ -125,14 +125,14 @@ func processCSV(path, eventType, magCol string) ([]domain.RawCSVRecord, []domain
 		}
 
 		rec := domain.RawCSVRecord{
-			Time:     get(row, colIdx, "Time"),
-			Location: get(row, colIdx, "Location"),
-			County:   get(row, colIdx, "County"),
-			State:    get(row, colIdx, "State"),
-			Lat:      get(row, colIdx, "Lat"),
-			Lon:      get(row, colIdx, "Lon"),
-			Comments: get(row, colIdx, "Comments"),
-			Type:     eventType,
+			Time:      get(row, colIdx, "Time"),
+			Location:  get(row, colIdx, "Location"),
+			County:    get(row, colIdx, "County"),
+			State:     get(row, colIdx, "State"),
+			Lat:       get(row, colIdx, "Lat"),
+			Lon:       get(row, colIdx, "Lon"),
+			Comments:  get(row, colIdx, "Comments"),
+			EventType: eventType,
 		}
 
 		// Set the type-specific magnitude field.
