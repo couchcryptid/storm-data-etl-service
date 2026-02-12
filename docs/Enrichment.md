@@ -136,6 +136,16 @@ When Mapbox geocoding is enabled (`MAPBOX_TOKEN` set), events are enriched with 
 | `geo_confidence` | Provider confidence score (0.0--1.0) |
 | `geo_source` | How the coordinates were obtained: `"forward"`, `"reverse"`, `"original"`, or `"failed"` |
 
+### Value Analysis
+
+Based on the mock dataset (271 records from NOAA SPC 2024-04-26):
+
+- **100% of records have coordinates** -- every event takes the reverse geocode path. Forward geocoding (name-to-coordinates) is unused in this dataset but remains available as a safety net for records missing coordinates.
+- **83.8% have relative-direction locations** like "8 ESE Chappel" -- Mapbox replaces these with standardized addresses (e.g., "Chappel, San Saba County, Texas").
+- **`confidence` is uniformly high (~1.0)** for reverse geocoding with precise coordinates. The confidence score provides discriminating value primarily for forward geocoding, where fuzzy name matching may produce lower scores.
+
+The primary value of Mapbox enrichment is **address normalization** (`formatted_address`, `place_name`), not the confidence score. Approximately 70% of the value comes from replacing cryptic relative-direction locations with canonical, human-readable addresses suitable for cross-referencing with other geographic datasets.
+
 ### Graceful Degradation
 
 Geocoding failures never block the pipeline. If the API call fails or returns no results:
@@ -144,9 +154,34 @@ Geocoding failures never block the pipeline. If the API call fails or returns no
 - `geo_source` is set to `"failed"` (API error) or `"original"` (no results)
 - A warning is logged with the event ID and error details
 
+### Configuration
+
+Geocoding is feature-flagged via environment variables. Setting `MAPBOX_TOKEN` auto-enables geocoding; `MAPBOX_ENABLED=false` overrides this.
+
+| Variable | Default | Description |
+|---|---|---|
+| `MAPBOX_TOKEN` | *(empty)* | Mapbox API access token. **Secret -- do not commit.** |
+| `MAPBOX_ENABLED` | auto | Explicit override. Auto-enabled when token is set. |
+| `MAPBOX_TIMEOUT` | `5s` | HTTP timeout for Mapbox API requests. |
+| `MAPBOX_CACHE_SIZE` | `1000` | Maximum LRU cache entries. |
+
+**Local development**: Set `MAPBOX_TOKEN` in the gitignored `.env` file or export it in your shell.
+
+**Docker Compose**: The token is passed from the host environment via the `environment` directive in `compose.yml`. Export `MAPBOX_TOKEN` before running `docker compose up` or `make up`.
+
+**CI/CD**: `MAPBOX_TOKEN` is stored as a GitHub Actions secret and injected into the E2E workflow and smoke tests.
+
 ### Caching
 
 Results are cached in an LRU cache (`MAPBOX_CACHE_SIZE`, default 1000 entries). Empty results (no `FormattedAddress`) are not cached so transient "not found" responses can be retried on the next occurrence.
+
+### Testing
+
+Geocoding has three layers of tests:
+
+- **Unit tests** (`go test ./...`): Mock-based tests covering enrichment logic, client HTTP, cache behavior, and config validation. Run in CI on every push.
+- **Smoke tests** (`make test-smoke`): Build-tag-gated tests (`//go:build mapbox`) that hit the real Mapbox API. Require `MAPBOX_TOKEN` in the environment. Run in CI on pushes to `main`.
+- **E2E tests** (`make test-e2e`): Full stack tests that verify geocoding fields propagate through Kafka to the API's GraphQL endpoint.
 
 ## Output Event Format
 

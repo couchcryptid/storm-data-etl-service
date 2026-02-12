@@ -36,6 +36,26 @@ The `domain.Geocoder` interface defines the geocoding port. The Mapbox adapter i
 
 All adapters accept `*slog.Logger` and configuration via their constructors. No global state. Every component is testable in isolation.
 
+## What the Codebase Reveals
+
+The ETL's code tells a story about where complexity lives and how it's managed.
+
+### Domain logic earns its isolation
+
+The `domain` package has zero infrastructure imports. Every enrichment function is pure: `DeriveSeverity`, `ParseLocation`, `NormalizeMagnitude`, `EnrichWithGeocoding` all take a `StormEvent` and return a `StormEvent`. This isn't incidental -- it's the reason the enrichment pipeline can be tested with a single `go test` in under a second, with no Docker, no Kafka, no network calls. Changes to business rules (new severity thresholds, new location formats) are fast to implement and fast to verify.
+
+### The hexagonal boundary is real, not ceremonial
+
+`BatchExtractor`, `Transformer`, and `BatchLoader` aren't just interface definitions -- they're the reason the integration test can spin up real Kafka via testcontainers and validate the full pipeline without mocking. The adapter layer is thin (Kafka reader/writer) and the domain layer does the real work. This means infrastructure changes (upgrading kafka-go, adding a new transport) don't touch business logic, and business logic changes don't require infrastructure.
+
+### Feature flags through nil
+
+Geocoding is enabled by passing a `Geocoder` implementation and disabled by passing `nil`. No boolean flags, no config checks in the pipeline -- just a nil check in `EnrichWithGeocoding`. This pattern means the pipeline always runs the same code path; the only difference is whether the geocoder does real work or short-circuits. Changes to enable/disable geocoding require zero code changes in the pipeline itself.
+
+### Graceful degradation is a first-class concern
+
+The ETL never blocks on enrichment failure. Malformed messages are logged and skipped. Geocoding API errors produce `source: "failed"` but the event continues through the pipeline. Magnitude normalization handles legacy hundredths format silently. This reflects a design where data throughput is prioritized over data perfection -- better to have a record with empty geocoding than to lose the record entirely.
+
 ## Static Analysis
 
 ### golangci-lint
