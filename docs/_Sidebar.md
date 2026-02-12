@@ -2,7 +2,6 @@
 
 - [[Home]]
 - [[Architecture]]
-- [[Configuration]]
 - [[Development]]
 - [[Enrichment Rules|Enrichment]]
 

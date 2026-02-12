@@ -16,7 +16,6 @@ Uses the [storm-data-shared](https://github.com/couchcryptid/storm-data-shared/w
 
 ## Pages
 
-- [[Architecture]] -- System design, package layout, design decisions, and capacity
-- [[Configuration]] -- Environment variables and validation
+- [[Architecture]] -- System design, package layout, configuration, design decisions, and capacity
 - [[Development]] -- Build, test, lint, CI, and project conventions
 - [[Enrichment Rules|Enrichment]] -- Transformation pipeline, normalization, and severity classification

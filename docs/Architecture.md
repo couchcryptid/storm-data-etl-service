@@ -119,6 +119,25 @@ SPC data volumes are small (~1,000--5,000 records/day during storm season). The 
 
 For horizontal scaling, deploy multiple instances with Kafka consumer groups (`KAFKA_GROUP_ID`). Throughput scales linearly up to the source topic partition count.
 
+## Configuration
+
+All configuration is via environment variables with defaults suitable for local development.
+
+| Variable | Default | Description |
+| -------- | ------- | ----------- |
+| `KAFKA_BROKERS` | `localhost:9092` | Comma-separated Kafka broker addresses |
+| `KAFKA_SOURCE_TOPIC` | `raw-weather-reports` | Topic to consume raw storm reports from |
+| `KAFKA_SINK_TOPIC` | `transformed-weather-data` | Topic to produce enriched events to |
+| `KAFKA_GROUP_ID` | `storm-data-etl` | Consumer group ID |
+| `HTTP_ADDR` | `:8080` | Health/metrics HTTP server address |
+| `LOG_LEVEL` | `info` | `debug`, `info`, `warn`, `error` |
+| `LOG_FORMAT` | `json` | `json` or `text` |
+| `SHUTDOWN_TIMEOUT` | `10s` | Graceful shutdown deadline |
+| `BATCH_SIZE` | `50` | Messages per batch (1--1000) |
+| `BATCH_FLUSH_INTERVAL` | `500ms` | Max wait before flushing a partial batch |
+
+Loaded and validated in `internal/config/config.go`. Fails fast on empty broker list, empty topics, or invalid durations. Shared parsers from [storm-data-shared](https://github.com/couchcryptid/storm-data-shared) handle `BATCH_SIZE`, `BATCH_FLUSH_INTERVAL`, `SHUTDOWN_TIMEOUT`, and `KAFKA_BROKERS`.
+
 ## Related
 
 - [System Architecture](https://github.com/couchcryptid/storm-data-system/wiki/Architecture) -- full pipeline design, deployment topology, and improvement roadmap
@@ -126,5 +145,4 @@ For horizontal scaling, deploy multiple instances with Kafka consumer groups (`K
 - [API Architecture](https://github.com/couchcryptid/storm-data-api/wiki/Architecture) -- downstream consumer of enriched events
 - [Shared Architecture](https://github.com/couchcryptid/storm-data-shared/wiki/Architecture) -- shared library packages used by the ETL
 - [[Enrichment]] -- severity classification, location parsing, and enrichment rules
-- [[Configuration]] -- environment variables and settings
 - [[Development]] -- build, test, lint, CI, and project conventions
