@@ -118,3 +118,13 @@ A separate `release.yml` workflow (triggered by CI success on `main`) handles ve
 - **Feature flags via environment**: Optional features follow the `FOO_ENABLED` + `FOO_TOKEN` pattern. Setting `MAPBOX_TOKEN` auto-enables geocoding; `MAPBOX_ENABLED` provides an explicit override. The `nil` geocoder path is always safe.
 - **Domain interfaces for external services**: The `domain.Geocoder` interface defines the geocoding port. The Mapbox adapter implements it, and a `nil` geocoder disables the feature. Pass `nil` for the geocoder and `slog.Default()` for the logger in tests that don't need geocoding.
 - **Adapter constructor injection**: All adapters (Kafka, HTTP, Mapbox) accept `*slog.Logger` via their constructors for consistent, testable logging.
+
+## Related
+
+- [System Development](https://github.com/couchcryptid/storm-data-system/wiki/Development) -- multi-repo workflow, CI conventions, and cross-service patterns
+- [System Testing](https://github.com/couchcryptid/storm-data-system/wiki/Testing) -- E2E and UAT tests that validate the full pipeline
+- [Shared Development](https://github.com/couchcryptid/storm-data-shared/wiki/Development) -- shared library development and versioning
+- [[Configuration]] -- environment variables and feature flags
+- [[Architecture]] -- hexagonal design, batch processing, and offset strategy
+- [[Enrichment]] -- severity classification, location parsing, and geocoding
+- [[Code Quality]] -- linting, static analysis, and quality gates

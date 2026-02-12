@@ -130,3 +130,13 @@ Malformed messages are logged, their offsets committed, and processing continues
 SPC data volumes are small (~1,000--5,000 records/day during storm season). The pipeline processes an entire day's data in seconds. At ~11--100 messages/second throughput, the service is over-provisioned by orders of magnitude for expected load. The 256 MB container memory limit provides 5--8x headroom over the ~30--50 MB steady-state footprint.
 
 For horizontal scaling, deploy multiple instances with Kafka consumer groups (`KAFKA_GROUP_ID`). Throughput scales linearly up to the source topic partition count.
+
+## Related
+
+- [System Architecture](https://github.com/couchcryptid/storm-data-system/wiki/Architecture) -- full pipeline design, deployment topology, and improvement roadmap
+- [Collector Architecture](https://github.com/couchcryptid/storm-data-collector/wiki/Architecture) -- upstream service that publishes raw CSV events to Kafka
+- [API Architecture](https://github.com/couchcryptid/storm-data-api/wiki/Architecture) -- downstream consumer of enriched events
+- [Shared Architecture](https://github.com/couchcryptid/storm-data-shared/wiki/Architecture) -- shared library packages used by the ETL
+- [[Enrichment]] -- severity classification, location parsing, and geocoding rules
+- [[Configuration]] -- environment variables and feature flags
+- [[Deployment]] -- Docker Compose setup and production notes

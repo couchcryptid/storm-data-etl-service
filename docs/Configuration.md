@@ -83,3 +83,12 @@ Override any variable as needed:
 ```sh
 LOG_LEVEL=debug MAPBOX_TOKEN=pk.xxx make run
 ```
+
+## Related
+
+- [System Configuration](https://github.com/couchcryptid/storm-data-system/wiki/Configuration) -- environment variables across all services
+- [Shared Configuration](https://github.com/couchcryptid/storm-data-shared/wiki/Configuration) -- shared parsers for Kafka, batch, and shutdown settings
+- [Collector Configuration](https://github.com/couchcryptid/storm-data-collector/wiki/Configuration) -- upstream Kafka producer settings
+- [[Architecture]] -- design decisions and hexagonal architecture
+- [[Enrichment]] -- geocoding feature flag behavior and Mapbox settings
+- [[Deployment]] -- Docker Compose environment files

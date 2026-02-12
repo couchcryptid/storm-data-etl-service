@@ -192,3 +192,12 @@ The serialized output includes:
 - **Headers**:
   - `type`: Normalized event type
   - `processed_at`: RFC 3339 timestamp of when enrichment occurred
+
+## Related
+
+- [API Data Model](https://github.com/couchcryptid/storm-data-api/wiki/Data-Model) -- downstream database schema and field mapping
+- [System Data Flow](https://github.com/couchcryptid/storm-data-system/wiki/Data-Flow) -- end-to-end data journey from NOAA CSV to GraphQL
+- [System Data Model](https://github.com/couchcryptid/storm-data-system/wiki/Data-Model) -- message shapes and event types across all services
+- [[Architecture]] -- hexagonal design and enrichment pipeline
+- [[Configuration]] -- Mapbox geocoding feature flags and settings
+- [[Development]] -- testing enrichment rules (unit, smoke, E2E)

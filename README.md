@@ -124,3 +124,4 @@ See the [project wiki](../../wiki) for detailed documentation:
 - [Deployment](../../wiki/Deployment) -- Docker Compose and Docker image
 - [Development](../../wiki/Development) -- Developer workflow, testing, and CI
 - [Enrichment Rules](../../wiki/Enrichment) -- Transformation and severity classification logic
+- [Code Quality](../../wiki/Code-Quality) -- Linting, static analysis, and quality gates
