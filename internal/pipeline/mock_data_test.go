@@ -19,7 +19,7 @@ import (
 type mockJSONRow map[string]string
 
 func TestStormTransformer_WithMockJSONData(t *testing.T) {
-	transformer := pipeline.NewTransformer(nil, slog.Default())
+	transformer := pipeline.NewTransformer(slog.Default())
 	baseDate := time.Date(2024, time.April, 26, 0, 0, 0, 0, time.UTC)
 
 	cases := []struct {

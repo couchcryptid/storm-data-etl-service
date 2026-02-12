@@ -7,7 +7,7 @@ A Go service that consumes raw weather storm reports from a Kafka topic, enriche
 The service runs a continuous ETL loop:
 
 1. **Extract** -- Consumes JSON storm reports from a Kafka source topic
-2. **Transform** -- Parses, normalizes, and enriches each event (severity classification, location parsing, unit normalization, optional geocoding via Mapbox)
+2. **Transform** -- Parses, normalizes, and enriches each event (severity classification, location parsing, unit normalization, time bucketing)
 3. **Load** -- Produces the enriched event to a Kafka sink topic
 
 Supported event types: **hail**, **wind**, and **tornado**.
@@ -52,10 +52,6 @@ All configuration is via environment variables (loaded from `.env` in Docker Com
 | `LOG_LEVEL`          | `info`                     | Log level: `debug`, `info`, `warn`, `error`    |
 | `LOG_FORMAT`         | `json`                     | Log format: `json` or `text`                   |
 | `SHUTDOWN_TIMEOUT`   | `10s`                      | Graceful shutdown deadline                     |
-| `MAPBOX_TOKEN`       | *(none)*                   | Mapbox API token; auto-enables geocoding if set |
-| `MAPBOX_ENABLED`     | auto-detected              | Explicit override (`true`/`false`) for geocoding |
-| `MAPBOX_TIMEOUT`     | `5s`                       | HTTP timeout for Mapbox API requests           |
-| `MAPBOX_CACHE_SIZE`  | `1000`                     | Max entries in the geocoding LRU cache         |
 | `BATCH_SIZE`         | `50`                       | Messages per batch (1--1000)                   |
 | `BATCH_FLUSH_INTERVAL` | `500ms`                  | Max wait before flushing a partial batch       |
 
@@ -77,10 +73,6 @@ All configuration is via environment variables (loaded from `.env` in Docker Com
 | `storm_etl_pipeline_running`                   | Gauge     | --                  | `1` when the pipeline loop is active        |
 | `storm_etl_batch_size`                         | Histogram | --                  | Number of messages per batch                |
 | `storm_etl_batch_processing_duration_seconds`  | Histogram | --                  | Duration of batch processing                |
-| `storm_etl_geocode_requests_total`             | Counter   | `method`, `outcome` | Geocoding API requests (forward/reverse, success/error/empty) |
-| `storm_etl_geocode_cache_total`                | Counter   | `method`, `result`  | Geocoding cache lookups (forward/reverse, hit/miss) |
-| `storm_etl_geocode_api_duration_seconds`       | Histogram | `method`            | Mapbox API request duration                 |
-| `storm_etl_geocode_enabled`                    | Gauge     | --                  | `1` when geocoding enrichment is active     |
 
 ## Development
 
@@ -106,9 +98,8 @@ internal/
   adapter/
     httpadapter/            Health, readiness, and metrics HTTP server
     kafka/                  Kafka reader (consumer) and writer (producer)
-    mapbox/                 Mapbox geocoding client with LRU cache
   config/                   Environment-based configuration (uses storm-data-shared/config)
-  domain/                   Domain types, transformation logic, and geocoding
+  domain/                   Domain types and transformation logic
   integration/              Integration tests (require Docker)
   observability/            Logging (via storm-data-shared) and Prometheus metrics
   pipeline/                 ETL orchestration (extract, transform, load; uses storm-data-shared/retry)
@@ -121,7 +112,5 @@ See the [project wiki](../../wiki) for detailed documentation:
 
 - [Architecture](../../wiki/Architecture) -- System design, data flow, and capacity
 - [Configuration](../../wiki/Configuration) -- Environment variables and validation
-- [Deployment](../../wiki/Deployment) -- Docker Compose and Docker image
 - [Development](../../wiki/Development) -- Developer workflow, testing, and CI
 - [Enrichment Rules](../../wiki/Enrichment) -- Transformation and severity classification logic
-- [Code Quality](../../wiki/Code-Quality) -- Linting, static analysis, and quality gates

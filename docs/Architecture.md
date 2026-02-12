@@ -1,8 +1,17 @@
 # Architecture
 
-![Architecture](architecture.excalidraw.svg)
-
 ## Overview
+
+```
+             ┌──────────────────────────────────────┐
+             │           internal/pipeline           │
+  Kafka ────>│  BatchExtractor  Transformer  Loader  │────> Kafka
+  (raw)      │       │              │          │     │      (enriched)
+             └───────┼──────────────┼──────────┼─────┘
+                     │              │          │
+              adapter/kafka   domain/       adapter/kafka
+              (reader.go)   (transform.go)  (writer.go)
+```
 
 The Storm Data ETL Service is a single-binary Go application that reads raw storm reports from Kafka, enriches them, and writes the results back to Kafka. It follows a hexagonal (ports and adapters) architecture.
 
@@ -18,8 +27,6 @@ Pure domain logic with no infrastructure dependencies.
 
 - **`event.go`** -- Domain types: `RawEvent`, `StormEvent`, `OutputEvent`, `Location`, `Geo`
 - **`transform.go`** -- All transformation and enrichment functions: parsing, normalization, severity derivation, location parsing, serialization
-- **`geocoder.go`** -- `Geocoder` interface and `GeocodingResult` type (domain port for geocoding providers)
-- **`geocode.go`** -- `EnrichWithGeocoding()` function: forward/reverse geocoding with graceful degradation
 - **`clock.go`** -- Swappable clock for deterministic testing
 
 ### `internal/pipeline`
@@ -27,7 +34,7 @@ Pure domain logic with no infrastructure dependencies.
 Orchestration layer that defines the ETL interfaces and loop.
 
 - **`pipeline.go`** -- `BatchExtractor`, `Transformer`, and `BatchLoader` interfaces. The `Pipeline` struct runs the continuous extract-transform-load loop with batch processing and backoff on failure.
-- **`transform.go`** -- `StormTransformer` adapts domain functions to the `Transformer` interface. Calls `EnrichStormEvent` followed by `EnrichWithGeocoding` (when a geocoder is configured).
+- **`transform.go`** -- `StormTransformer` adapts domain functions to the `Transformer` interface. Calls `EnrichStormEvent` to apply all enrichment steps.
 
 ### `internal/adapter/kafka`
 
@@ -35,13 +42,6 @@ Kafka infrastructure adapters that directly implement the pipeline's `BatchExtra
 
 - **`reader.go`** -- Wraps `segmentio/kafka-go` Reader with explicit offset commit (consumer group mode) and time-bounded batch extraction. Implements `pipeline.BatchExtractor`.
 - **`writer.go`** -- Wraps `segmentio/kafka-go` Writer with `RequireAll` acks and batch writes. Implements `pipeline.BatchLoader`.
-
-### `internal/adapter/mapbox`
-
-Mapbox Geocoding API adapter that implements `domain.Geocoder`.
-
-- **`client.go`** -- HTTP client for forward and reverse geocoding via the Mapbox Places API. Instrumented with Prometheus metrics for request outcomes (`storm_etl_geocode_requests_total`) and API latency (`storm_etl_geocode_api_duration_seconds`).
-- **`cache.go`** -- `CachedGeocoder` decorator wrapping any `Geocoder` with a thread-safe LRU cache. Instrumented with cache hit/miss metrics (`storm_etl_geocode_cache_total`). Empty results (no `FormattedAddress`) are not cached so transient "not found" responses can be retried.
 
 ### `internal/adapter/httpadapter`
 
@@ -54,11 +54,11 @@ HTTP server for operational endpoints.
 ### `internal/observability`
 
 - **`logging.go`** -- Thin wrapper that delegates to [storm-data-shared](https://github.com/couchcryptid/storm-data-shared) `observability.NewLogger()` for structured `slog` logging
-- **`metrics.go`** -- Prometheus counter, histogram, and gauge definitions for pipeline and geocoding observability
+- **`metrics.go`** -- Prometheus counter, histogram, and gauge definitions for pipeline observability
 
 ### `internal/config`
 
-Environment-based configuration. Uses shared parsers from [storm-data-shared](https://github.com/couchcryptid/storm-data-shared) (`ParseShutdownTimeout`, `ParseBatchSize`, `ParseBatchFlushInterval`, `EnvOrDefault`, `ParseBrokers`) combined with ETL-specific settings (Mapbox geocoding, Kafka topics).
+Environment-based configuration. Uses shared parsers from [storm-data-shared](https://github.com/couchcryptid/storm-data-shared) (`ParseShutdownTimeout`, `ParseBatchSize`, `ParseBatchFlushInterval`, `EnvOrDefault`, `ParseBrokers`) combined with ETL-specific settings (Kafka topics).
 
 ## Design Decisions
 
@@ -88,18 +88,6 @@ The main function uses `signal.NotifyContext` to capture `SIGINT`/`SIGTERM`. On 
 ### Thread Safety
 
 The `Pipeline.ready` flag uses `atomic.Bool` since it is written by the pipeline goroutine and read by the HTTP readiness handler concurrently.
-
-### Feature-Flagged Geocoding
-
-Geocoding enrichment is opt-in via `MAPBOX_TOKEN` / `MAPBOX_ENABLED` environment variables. When disabled, the `Geocoder` dependency is `nil` and `EnrichWithGeocoding` is a no-op, so the transform path remains purely CPU-bound. This allows the service to run without external API dependencies while supporting richer data when configured.
-
-### Geocoding Graceful Degradation
-
-If a geocoding request fails (network error, API error, or no results), the event is still enriched with all other fields and loaded to the sink topic. The `GeoSource` field is set to `"failed"` or `"original"` to indicate what happened, allowing downstream consumers to distinguish between geocoded and non-geocoded events.
-
-### LRU Cache for Geocoding
-
-The `CachedGeocoder` uses an in-memory LRU cache to avoid redundant API calls for frequently seen locations. The cache is thread-safe, configurable in size (`MAPBOX_CACHE_SIZE`), and only stores successful results with a non-empty `FormattedAddress`.
 
 ### Batch Processing
 
@@ -137,6 +125,6 @@ For horizontal scaling, deploy multiple instances with Kafka consumer groups (`K
 - [Collector Architecture](https://github.com/couchcryptid/storm-data-collector/wiki/Architecture) -- upstream service that publishes raw CSV events to Kafka
 - [API Architecture](https://github.com/couchcryptid/storm-data-api/wiki/Architecture) -- downstream consumer of enriched events
 - [Shared Architecture](https://github.com/couchcryptid/storm-data-shared/wiki/Architecture) -- shared library packages used by the ETL
-- [[Enrichment]] -- severity classification, location parsing, and geocoding rules
-- [[Configuration]] -- environment variables and feature flags
-- [[Deployment]] -- Docker Compose setup and production notes
+- [[Enrichment]] -- severity classification, location parsing, and enrichment rules
+- [[Configuration]] -- environment variables and settings
+- [[Development]] -- build, test, lint, CI, and project conventions

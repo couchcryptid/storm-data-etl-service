@@ -121,7 +121,7 @@ func TestKafkaReaderWriter(t *testing.T) {
 	require.NoError(t, raw.Commit(ctx))
 
 	// Transform the raw event into a storm event.
-	transformer := pipeline.NewTransformer(nil, discardLogger())
+	transformer := pipeline.NewTransformer(discardLogger())
 	event, err := transformer.Transform(ctx, raw)
 	require.NoError(t, err)
 
@@ -198,7 +198,7 @@ func TestPipelineEndToEnd(t *testing.T) {
 	reader := kafka.NewReader(cfg, discardLogger())
 	t.Cleanup(func() { _ = reader.Close() })
 
-	transformer := pipeline.NewTransformer(nil, discardLogger())
+	transformer := pipeline.NewTransformer(discardLogger())
 
 	writer := kafka.NewWriter(cfg, discardLogger())
 	t.Cleanup(func() { _ = writer.Close() })
@@ -326,7 +326,7 @@ func TestPipelineTransformError(t *testing.T) {
 	reader := kafka.NewReader(cfg, discardLogger())
 	t.Cleanup(func() { _ = reader.Close() })
 
-	transformer := pipeline.NewTransformer(nil, discardLogger())
+	transformer := pipeline.NewTransformer(discardLogger())
 
 	writer := kafka.NewWriter(cfg, discardLogger())
 	t.Cleanup(func() { _ = writer.Close() })

@@ -2,8 +2,7 @@ package config
 
 import (
 	"errors"
-	"os"
-	"strconv"
+
 	"time"
 
 	sharedcfg "github.com/couchcryptid/storm-data-shared/config"
@@ -22,12 +21,6 @@ type Config struct {
 
 	BatchSize          int
 	BatchFlushInterval time.Duration
-
-	// Mapbox geocoding configuration.
-	MapboxToken     string
-	MapboxEnabled   bool
-	MapboxTimeout   time.Duration
-	MapboxCacheSize int
 }
 
 // Load reads configuration from environment variables, applying defaults where unset.
@@ -35,12 +28,6 @@ func Load() (*Config, error) {
 	shutdownTimeout, err := sharedcfg.ParseShutdownTimeout()
 	if err != nil {
 		return nil, err
-	}
-
-	mapboxTimeoutStr := sharedcfg.EnvOrDefault("MAPBOX_TIMEOUT", "5s")
-	mapboxTimeout, err2 := time.ParseDuration(mapboxTimeoutStr)
-	if err2 != nil || mapboxTimeout <= 0 {
-		return nil, errors.New("invalid MAPBOX_TIMEOUT")
 	}
 
 	batchSize, err := sharedcfg.ParseBatchSize()
@@ -51,14 +38,6 @@ func Load() (*Config, error) {
 	flushInterval, err := sharedcfg.ParseBatchFlushInterval()
 	if err != nil {
 		return nil, err
-	}
-
-	mapboxCacheSize := parseMapboxCacheSize()
-
-	mapboxToken := os.Getenv("MAPBOX_TOKEN")
-	mapboxEnabled := mapboxToken != ""
-	if v := os.Getenv("MAPBOX_ENABLED"); v != "" {
-		mapboxEnabled = v == "true"
 	}
 
 	cfg := &Config{
@@ -72,11 +51,6 @@ func Load() (*Config, error) {
 		ShutdownTimeout:    shutdownTimeout,
 		BatchSize:          batchSize,
 		BatchFlushInterval: flushInterval,
-
-		MapboxToken:     mapboxToken,
-		MapboxEnabled:   mapboxEnabled,
-		MapboxTimeout:   mapboxTimeout,
-		MapboxCacheSize: mapboxCacheSize,
 	}
 
 	if len(cfg.KafkaBrokers) == 0 {
@@ -88,18 +62,6 @@ func Load() (*Config, error) {
 	if cfg.KafkaSinkTopic == "" {
 		return nil, errors.New("KAFKA_SINK_TOPIC is required")
 	}
-	if cfg.MapboxEnabled && cfg.MapboxToken == "" {
-		return nil, errors.New("MAPBOX_ENABLED is true but MAPBOX_TOKEN is not set")
-	}
 
 	return cfg, nil
-}
-
-func parseMapboxCacheSize() int {
-	if s := os.Getenv("MAPBOX_CACHE_SIZE"); s != "" {
-		if n, err := strconv.Atoi(s); err == nil && n > 0 {
-			return n
-		}
-	}
-	return 1000
 }

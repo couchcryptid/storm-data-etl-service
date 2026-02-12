@@ -18,7 +18,5 @@ Uses the [storm-data-shared](https://github.com/couchcryptid/storm-data-shared/w
 
 - [[Architecture]] -- System design, package layout, design decisions, and capacity
 - [[Configuration]] -- Environment variables and validation
-- [[Deployment]] -- Docker Compose setup and Docker image
 - [[Development]] -- Build, test, lint, CI, and project conventions
-- [[Code Quality]] -- Linting, static analysis, and quality gates
 - [[Enrichment Rules|Enrichment]] -- Transformation pipeline, normalization, and severity classification

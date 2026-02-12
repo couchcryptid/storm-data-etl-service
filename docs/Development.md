@@ -115,16 +115,12 @@ A separate `release.yml` workflow (triggered by CI success on `main`) handles ve
 - **Domain logic is pure**: The `domain` package has no infrastructure imports. Transformation functions are stateless and operate on domain types.
 - **Testable time**: The `clock` package variable (via `clockwork`) allows tests to control time without relying on `time.Sleep` or wall-clock assertions.
 - **Structured logging**: All logging uses `log/slog` with key-value pairs. The pipeline logs include Kafka metadata (topic, partition, offset) for traceability.
-- **Feature flags via environment**: Optional features follow the `FOO_ENABLED` + `FOO_TOKEN` pattern. Setting `MAPBOX_TOKEN` auto-enables geocoding; `MAPBOX_ENABLED` provides an explicit override. The `nil` geocoder path is always safe.
-- **Domain interfaces for external services**: The `domain.Geocoder` interface defines the geocoding port. The Mapbox adapter implements it, and a `nil` geocoder disables the feature. Pass `nil` for the geocoder and `slog.Default()` for the logger in tests that don't need geocoding.
-- **Adapter constructor injection**: All adapters (Kafka, HTTP, Mapbox) accept `*slog.Logger` via their constructors for consistent, testable logging.
+- **Adapter constructor injection**: All adapters (Kafka, HTTP) accept `*slog.Logger` via their constructors for consistent, testable logging.
 
 ## Related
 
 - [System Development](https://github.com/couchcryptid/storm-data-system/wiki/Development) -- multi-repo workflow, CI conventions, and cross-service patterns
-- [System Testing](https://github.com/couchcryptid/storm-data-system/wiki/Testing) -- E2E and UAT tests that validate the full pipeline
 - [Shared Development](https://github.com/couchcryptid/storm-data-shared/wiki/Development) -- shared library development and versioning
-- [[Configuration]] -- environment variables and feature flags
+- [[Configuration]] -- environment variables and settings
 - [[Architecture]] -- hexagonal design, batch processing, and offset strategy
-- [[Enrichment]] -- severity classification, location parsing, and geocoding
-- [[Code Quality]] -- linting, static analysis, and quality gates
+- [[Enrichment]] -- severity classification, location parsing, and enrichment rules

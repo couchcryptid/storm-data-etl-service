@@ -14,12 +14,6 @@ type Metrics struct {
 	// Batch processing metrics.
 	BatchSize               prometheus.Histogram
 	BatchProcessingDuration prometheus.Histogram
-
-	// Geocoding metrics.
-	GeocodeRequests    *prometheus.CounterVec   // labels: method={forward,reverse}, outcome={success,error,empty}
-	GeocodeCache       *prometheus.CounterVec   // labels: method={forward,reverse}, result={hit,miss}
-	GeocodeAPIDuration *prometheus.HistogramVec // labels: method={forward,reverse}
-	GeocodeEnabled     prometheus.Gauge
 }
 
 // NewMetrics creates and registers all pipeline metrics with the default Prometheus registry.
@@ -57,27 +51,6 @@ func NewMetrics() *Metrics {
 			Help:      "Duration of a complete batch extract-transform-load cycle.",
 			Buckets:   []float64{0.01, 0.05, 0.1, 0.5, 1, 2.5, 5, 10},
 		}),
-		GeocodeRequests: prometheus.NewCounterVec(prometheus.CounterOpts{
-			Namespace: "storm_etl",
-			Name:      "geocode_requests_total",
-			Help:      "Geocoding API requests by method and outcome.",
-		}, []string{"method", "outcome"}),
-		GeocodeCache: prometheus.NewCounterVec(prometheus.CounterOpts{
-			Namespace: "storm_etl",
-			Name:      "geocode_cache_total",
-			Help:      "Geocoding cache lookups by method and result.",
-		}, []string{"method", "result"}),
-		GeocodeAPIDuration: prometheus.NewHistogramVec(prometheus.HistogramOpts{
-			Namespace: "storm_etl",
-			Name:      "geocode_api_duration_seconds",
-			Help:      "Mapbox API request duration in seconds.",
-			Buckets:   []float64{0.01, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5},
-		}, []string{"method"}),
-		GeocodeEnabled: prometheus.NewGauge(prometheus.GaugeOpts{
-			Namespace: "storm_etl",
-			Name:      "geocode_enabled",
-			Help:      "1 when geocoding enrichment is enabled, 0 otherwise.",
-		}),
 	}
 
 	prometheus.MustRegister(
@@ -87,10 +60,6 @@ func NewMetrics() *Metrics {
 		m.PipelineRunning,
 		m.BatchSize,
 		m.BatchProcessingDuration,
-		m.GeocodeRequests,
-		m.GeocodeCache,
-		m.GeocodeAPIDuration,
-		m.GeocodeEnabled,
 	)
 
 	return m
@@ -106,9 +75,5 @@ func NewMetricsForTesting() *Metrics {
 		PipelineRunning:         prometheus.NewGauge(prometheus.GaugeOpts{Namespace: "storm_etl", Name: "pipeline_running"}),
 		BatchSize:               prometheus.NewHistogram(prometheus.HistogramOpts{Namespace: "storm_etl", Name: "batch_size"}),
 		BatchProcessingDuration: prometheus.NewHistogram(prometheus.HistogramOpts{Namespace: "storm_etl", Name: "batch_processing_duration_seconds"}),
-		GeocodeRequests:         prometheus.NewCounterVec(prometheus.CounterOpts{Namespace: "storm_etl", Name: "geocode_requests_total"}, []string{"method", "outcome"}),
-		GeocodeCache:            prometheus.NewCounterVec(prometheus.CounterOpts{Namespace: "storm_etl", Name: "geocode_cache_total"}, []string{"method", "result"}),
-		GeocodeAPIDuration:      prometheus.NewHistogramVec(prometheus.HistogramOpts{Namespace: "storm_etl", Name: "geocode_api_duration_seconds"}, []string{"method"}),
-		GeocodeEnabled:          prometheus.NewGauge(prometheus.GaugeOpts{Namespace: "storm_etl", Name: "geocode_enabled"}),
 	}
 }

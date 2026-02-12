@@ -48,7 +48,7 @@ type Location struct {
 }
 
 // Geo represents a WGS-84 latitude/longitude coordinate pair.
-// Nested because lat/lon are always used together (geocoding lookups, bounding-box
+// Nested because lat/lon are always used together (bounding-box
 // queries, distance calculations). The API flattens to geo_lat/geo_lon columns.
 type Geo struct {
 	Lat float64 `json:"lat,omitempty"`
@@ -66,9 +66,8 @@ type Measurement struct {
 	Severity  *string `json:"severity,omitempty"`
 }
 
-// Geocoding holds the results of the optional geocoding enrichment step.
-// Nested because all four fields are always set together (or all left at zero
-// values) from a single Mapbox API call. Maps to the GraphQL Geocoding type.
+// Geocoding holds geocoding enrichment results. Currently unused but retained
+// in the wire format to avoid cascading changes to the API schema and database.
 // The API flattens to geocoding_* columns.
 type Geocoding struct {
 	FormattedAddress string  `json:"formatted_address,omitempty"`

@@ -11,7 +11,6 @@ import (
 )
 
 const (
-	testEventID    = "evt-123"
 	testLocationNW = "5.2 NW AUSTIN"
 	testUnknown    = "unknown type"
 	testEmptyStr   = "empty string"

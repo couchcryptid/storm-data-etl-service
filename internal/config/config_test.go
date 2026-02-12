@@ -8,10 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const (
-	defaultBroker   = "localhost:9092"
-	testMapboxToken = "pk.test-token"
-)
+const defaultBroker = "localhost:9092"
 
 func TestLoad_Defaults(t *testing.T) {
 	cfg, err := Load()
@@ -27,10 +24,6 @@ func TestLoad_Defaults(t *testing.T) {
 	assert.Equal(t, 10*time.Second, cfg.ShutdownTimeout)
 	assert.Equal(t, 50, cfg.BatchSize)
 	assert.Equal(t, 500*time.Millisecond, cfg.BatchFlushInterval)
-	assert.False(t, cfg.MapboxEnabled)
-	assert.Empty(t, cfg.MapboxToken)
-	assert.Equal(t, 5*time.Second, cfg.MapboxTimeout)
-	assert.Equal(t, 1000, cfg.MapboxCacheSize)
 }
 
 func TestLoad_CustomEnv(t *testing.T) {
@@ -44,9 +37,6 @@ func TestLoad_CustomEnv(t *testing.T) {
 	t.Setenv("SHUTDOWN_TIMEOUT", "30s")
 	t.Setenv("BATCH_SIZE", "100")
 	t.Setenv("BATCH_FLUSH_INTERVAL", "1s")
-	t.Setenv("MAPBOX_TOKEN", testMapboxToken)
-	t.Setenv("MAPBOX_TIMEOUT", "10s")
-	t.Setenv("MAPBOX_CACHE_SIZE", "500")
 
 	cfg, err := Load()
 	require.NoError(t, err)
@@ -61,10 +51,6 @@ func TestLoad_CustomEnv(t *testing.T) {
 	assert.Equal(t, 30*time.Second, cfg.ShutdownTimeout)
 	assert.Equal(t, 100, cfg.BatchSize)
 	assert.Equal(t, 1*time.Second, cfg.BatchFlushInterval)
-	assert.True(t, cfg.MapboxEnabled)
-	assert.Equal(t, testMapboxToken, cfg.MapboxToken)
-	assert.Equal(t, 10*time.Second, cfg.MapboxTimeout)
-	assert.Equal(t, 500, cfg.MapboxCacheSize)
 }
 
 func TestLoad_InvalidShutdownTimeout(t *testing.T) {
@@ -100,33 +86,4 @@ func TestLoad_InvalidBatchFlushInterval(t *testing.T) {
 	_, err := Load()
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "BATCH_FLUSH_INTERVAL")
-}
-
-func TestLoad_InvalidMapboxTimeout(t *testing.T) {
-	t.Setenv("MAPBOX_TIMEOUT", "bad")
-	_, err := Load()
-	require.Error(t, err)
-	assert.Contains(t, err.Error(), "MAPBOX_TIMEOUT")
-}
-
-func TestLoad_MapboxEnabledWithoutToken(t *testing.T) {
-	t.Setenv("MAPBOX_ENABLED", "true")
-	_, err := Load()
-	require.Error(t, err)
-	assert.Contains(t, err.Error(), "MAPBOX_TOKEN")
-}
-
-func TestLoad_MapboxTokenImpliesEnabled(t *testing.T) {
-	t.Setenv("MAPBOX_TOKEN", testMapboxToken)
-	cfg, err := Load()
-	require.NoError(t, err)
-	assert.True(t, cfg.MapboxEnabled)
-}
-
-func TestLoad_MapboxExplicitlyDisabled(t *testing.T) {
-	t.Setenv("MAPBOX_TOKEN", testMapboxToken)
-	t.Setenv("MAPBOX_ENABLED", "false")
-	cfg, err := Load()
-	require.NoError(t, err)
-	assert.False(t, cfg.MapboxEnabled)
 }

@@ -313,7 +313,7 @@ func TestPipeline_Run_CommitError(t *testing.T) {
 func TestStormTransformer_Transform(t *testing.T) {
 	raw := makeRawCSVEvent(t, "tornado", "EF3")
 
-	transformer := pipeline.NewTransformer(nil, slog.Default())
+	transformer := pipeline.NewTransformer(slog.Default())
 	event, err := transformer.Transform(context.Background(), raw)
 	require.NoError(t, err)
 	assert.NotEmpty(t, event.ID)

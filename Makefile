@@ -1,4 +1,4 @@
-.PHONY: build run test test-unit test-integration test-smoke test-cover lint fmt vuln clean
+.PHONY: build run test test-unit test-integration test-cover lint fmt vuln clean
 
 build:
 	go build -o bin/etl ./cmd/etl
@@ -13,9 +13,6 @@ test-unit:
 
 test-integration:
 	go test ./internal/integration -v -race -count=1 -tags=integration
-
-test-smoke:
-	go test ./internal/adapter/mapbox -v -count=1 -tags=mapbox
 
 test-cover:
 	go test ./... -coverprofile=coverage.out
